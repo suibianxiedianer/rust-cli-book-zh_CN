@@ -1,68 +1,59 @@
-# Output
+# 输出
 
-## Printing "Hello World"
+## 打印 "Hello World"
 
 ```rust
 println!("Hello World");
 ```
 
-Well, that was easy.
-Great, onto the next topic.
+很简单是吧，让我们进入下一个话题。
 
-## Using println
+## 使用 println
 
-You can pretty much print all the things you like
-with the `println!` macro.
-This macro has some pretty amazing capabilities,
-but also a special syntax.
-It expects you to write a string literal as the first parameter,
-that contains placeholders that will be filled in
-by the values of the parameters that follow as further arguments.
+使用 `println!` 宏你几乎可以打印出所有你喜欢的东西。这个宏有一些很棒的功能，
+也有一些特殊的语法。它需要你写一个字符串作为第一个参数，其中包括占位符，
+这些占位符将由后面的参数的值作为参数来填充。
 
-For example:
+比如：
 
 ```rust
 let x = 42;
 println!("My lucky number is {}.", x);
 ```
 
-will print
+将打印
 
 ```console
 My lucky number is 42.
 ```
 
-The curly braces (`{}`) in the string above is one of these placeholders.
-This is the default placeholder type
-that tries to print the given value in a human readable way.
-For numbers and strings this works very well,
-but not all types can do that.
-This is why there is also a "debug representation",
-that you can get by filling the braces of the placeholder like this: `{:?}`.
+上面字符串中的花括号（'{}'）就是占位符中的一种。这是默认的占位符类型，
+它尝试以人类可读的方式打印出给定的参数的值。对于数字和字符串，这很好用，
+但并不是所有的类型都可行。这就是为什么还有一个 "debug representation"，
+你可以使用这个占位符来调用它 `{:?}`。
 
-For example,
+比如，
 
 ```rust
 let xs = vec![1, 2, 3];
 println!("The list is: {:?}", xs);
 ```
 
-will print
+会打印
 
 ```console
 The list is: [1, 2, 3]
 ```
 
-If you want your own data types to be printable for debugging and logging,
-you can in most cases add a `#[derive(Debug)]` above their definition.
+如果你想在调试和日志中打印自己构建的类型，大部分情况下你可以在类型定义上添加
+`#[derive(Debug)]` 属性。
 
 <aside>
 
-**Aside:**
-"User-friendly" printing is done using the [`Display`] trait,
-debug output (human-readable but targeted at developers) uses the [`Debug`] trait.
-You can find more information about the syntax you can use in `println!`
-in the [documentation for the `std::fmt` module][std::fmt].
+**注：**
+“用户友好型”打印是通过 [`Display`] 特征实现的，而调试输出（适用于开发者）
+是使用 [`Debug`] 特征。你可以在 [`std::fmt` 模块文档][std::fmt]
+查看更多关于使用 `println!` 的语法信息。
 
 [`Display`]: https://doc.rust-lang.org/1.39.0/std/fmt/trait.Display.html
 [`Debug`]: https://doc.rust-lang.org/1.39.0/std/fmt/trait.Debug.html
@@ -70,31 +61,21 @@ in the [documentation for the `std::fmt` module][std::fmt].
 
 </aside>
 
-## Printing errors
+## 打印错误
 
-Printing errors should be done via `stderr`
-to make it easier for users
-and other tools
-to pipe their outputs to files
-or more tools.
+打印错误应通过 `stderr` 完成，
+以便用户和其它工具更方便的地将输出通过管道传输到文件或更多的工具中。
 
 <aside>
 
-**Aside:**
-On most operating systems,
-a program can write to two output streams, `stdout` and `stderr`.
-`stdout` is for the program's actual output,
-while `stderr` allows errors and other messages to be kept separate from `stdout`.
-That way,
-output can be stored to a file or piped to another program
-while errors are shown to the user.
+**注：**
+在大部分操作系统中，一个程序可以将输出写到两个流中，`stdout` 和 `stderr`。
+`stdout` 用于程序的实际输出，而 `stderr` 可将错误或其它信息与 `stdout` 分开。
+这样，正确输出可以存储到文件或管道传输到其它程序中，同时将错误展示给用户。
 
 </aside>
 
-In Rust this is achieved
-with `println!` and `eprintln!`,
-the former printing to `stdout`
-and the latter to `stderr`.
+在 Rust 中，使用 `println!` 和 `eprintln!`，前者对应 `stdout` 而后者 `stderr`。
 
 ```rust
 println!("This is information");
@@ -103,36 +84,25 @@ eprintln!("This is an error! :(");
 
 <aside>
 
-**Beware**: Printing [escape codes] can be dangerous,
-putting the user's terminal into a weird state.
-Always be careful when manually printing them!
+**当心**: 打印 [escape codes] 可能很危险，会导致用户的终端变成奇异的状态。
+在手动打印时请务必小心使用！
 
 [escape codes]: https://en.wikipedia.org/wiki/ANSI_escape_code
 
-Ideally you should be using a crate like `ansi_term`
-when dealing with raw escape codes
-to make your (and your user's) life easier.
+在你处理原始转义码时，最好使用 `ansi_term` 这样的 crate，
+以便你（和你程序的用户）更安心。
 
 </aside>
 
-## A note on printing performance
+## 关于打印性能的说明
 
-Printing to the terminal is surprisingly slow!
-If you call things like `println!` in a loop,
-it can easily become a bottleneck in an otherwise fast program.
-To speed this up,
-there are two things you can do.
+打印到终端时出奇的慢！如果你在循环中调用 `println!` 之类的东西，
+它很容易成为其它运行速度快的程序的瓶颈。你可以做两件事来为它提提速。
 
-First,
-you might want to reduce the number of writes
-that actually "flush" to the terminal.
-`println!` tells the system to flush to the terminal _every_ time,
-because it is common to print each new line.
-If you don't need that,
-you can wrap your `stdout` handle in a [`BufWriter`]
-which by default buffers up to 8 kB.
-(You can still call `.flush()` on this `BufWriter`
-when you want to print immediately.)
+首先，你需要尽量减少实际“刷新”到终端的写入次数。_每次_调用 `println!`时，
+它都会告诉系统刷新到终端，因为打印每个新行是很常见的。如果你不需要如此，
+你可以使用 [`BufWriter`] 来包装一下 `stdout` 的句柄，它的默认缓存为 8 kB。
+（当你想立即打印时，在 `BufWriter` 上调用 `.flush()` 即可。
 
 ```rust
 use std::io::{self, Write};
@@ -142,10 +112,8 @@ let mut handle = io::BufWriter::new(stdout); // optional: wrap that handle in a 
 writeln!(handle, "foo: {}", 42); // add `?` if you care about errors here
 ```
 
-Second,
-it helps to acquire a lock on `stdout` (or `stderr`)
-and use `writeln!` to print to it directly.
-This prevents the system from locking and unlocking `stdout` over and over again.
+其次，为 `stdout`（或 `stderr`）申请一把锁并使用 `writeln!` 来直接打印很有用。
+它会阻止系统不停地锁死和解锁 `stdout`。
 
 ```rust
 use std::io::{self, Write};
@@ -155,80 +123,59 @@ let mut handle = stdout.lock(); // acquire a lock on it
 writeln!(handle, "foo: {}", 42); // add `?` if you care about errors here
 ```
 
-You can also combine the two approaches.
+你也可以结合使用这两种方式。
 
 [`BufWriter`]: https://doc.rust-lang.org/1.39.0/std/io/struct.BufWriter.html
 
-## Showing a progress bar
+## 显示进度条
 
-Some CLI applications run less than a second,
-others take minutes or hours.
-If you are writing one of the latter types of programs,
-you might want to show the user that something is happening.
-For this, you should try to print useful status updates,
-ideally in a form that can be easily consumed.
+一些 CLI 程序的运行时间很长，会花费几分钟甚至数小时。
+如果你在编写这种程序，你可能希望向用户展示，其正在正常工作中。
+因此，你需要打印出有用的状态更新信息，最好是使用易于使用的方式打印。
 
-Using the [indicatif] crate,
-you can add progress bars
-and little spinners to your program.
-Here's a quick example:
+你可以使用 [indicatif] crate 来为你的程序添加进度条，这是一个简单的例子：
 
 ```rust,ignore
 {{#include output-progressbar.rs:1:9}}
 ```
 
-See the [documentation][indicatif docs]
-and [examples][indicatif examples]
-for more information.
+细节可查看 [indicatif 文档][indicatif docs] 和 [示例][indicatif examples]。
 
 [indicatif]: https://crates.io/crates/indicatif
 [indicatif docs]: https://docs.rs/indicatif
 [indicatif examples]: https://github.com/mitsuhiko/indicatif/tree/master/examples
 
-## Logging
+## 日志
 
-To make it easier to understand what is happening in our program,
-we might want to add some log statements.
-This is usually easy while writing your application.
-But it will become super helpful when running this program again in half a year.
-In some regard,
-logging is the same as using `println`,
-except that you can specify the importance of a message.
-The levels you can usually use are _error_, _warn_, _info_, _debug_, and _trace_
-(_error_ has the highest priority, _trace_ the lowest).
+为了更方便了解到我们的程序做了什么，我们需要给它添加上一些日志语句，这很简单。
+但在长时间后，例半年后再运行这个程序时，日志就变得非常有用了。在某些方面来说，
+日志的使用方法同 `println` 类似，只是它可以指定消息的重要性（级别）。
+通常可以使用的级别包括 _error_, _warn_, _info_, _debug_, and _trace_
+（_error_ 优先级最高，_trace_ 最低）。
 
-To add simple logging to your application,
-you'll need two things:
-The [log] crate (this contains macros named after the log level)
-and an _adapter_ that actually writes the log output somewhere useful.
-Having the ability to use log adapters is very flexible:
-You can, for example, use them to write logs not only to the terminal
-but also to [syslog], or to a central log server.
+只需这两样东西，你就可以给你的程序添加简单的日志功能：
+[Log] 箱（其中包含以日志级别命名的宏）和一个 _adapter_，
+它会将日志写到有用的地方。日志适配器的使用是十分灵活的：
+例如，你可以不仅将日志写入终端，同时也可写入 [syslog] 或其它日志服务器。
 
 [syslog]: https://en.wikipedia.org/wiki/Syslog
 
-Since we are right now only concerned with writing a CLI application,
-an easy adapter to use is [env_logger].
-It's called "env" logger because you can
-use an environment variable to specify which parts of your application
-you want to log
-(and at which level you want to log them).
-It will prefix your log messages with a timestamp
-and the module where the log messages come from.
-Since libraries can also use `log`,
-you easily configure their log output, too.
+因为我们现在最关心的是写一个 CLI 程序，所以选一个易于使用的适配器 [env_logger]。
+它之所以叫 "env" 日志记录器，因为你可以使用环境变量来指定，
+程序中哪部分日志需要记录及记录哪种级别日志。
+它会在你的日志信息前加上时间戳及所在模块信息。
+由于库也可以使用 `log`，你也可以轻松地配置它们的日志输出。
 
 [log]: https://crates.io/crates/log
 [env_logger]: https://crates.io/crates/env_logger
 
-Here's a quick example:
+这里有个简单的例子：
 
 ```rust,ignore
 {{#include output-log.rs}}
 ```
 
-Assuming you have this file as `src/bin/output-log.rs`,
-on Linux and macOS, you can run it like this:
+如果你有 `src/bin/output-log.rs` 这个文件，在 Linux 或 MacOS 上，你可以运行：
 ```console
 $ env RUST_LOG=info cargo run --bin output-log
     Finished dev [unoptimized + debuginfo] target(s) in 0.17s
@@ -237,7 +184,7 @@ $ env RUST_LOG=info cargo run --bin output-log
 [2018-11-30T20:25:52Z WARN  output_log] oops, nothing implemented!
 ```
 
-In Windows PowerShell, you can run it like this:
+在 Windows PowerShell，运行：
 ```console
 $ $env:RUST_LOG="info"
 $ cargo run --bin output-log
@@ -247,7 +194,7 @@ $ cargo run --bin output-log
 [2018-11-30T20:25:52Z WARN  output_log] oops, nothing implemented!
 ```
 
-In Windows CMD, you can run it like this:
+在 Windows CMD，运行：
 ```console
 $ set RUST_LOG=info
 $ cargo run --bin output-log
@@ -257,29 +204,22 @@ $ cargo run --bin output-log
 [2018-11-30T20:25:52Z WARN  output_log] oops, nothing implemented!
 ```
 
-`RUST_LOG` is the name of the environment variable
-you can use to set your log settings.
-`env_logger` also contains a builder
-so you can programmatically adjust these settings,
-and, for example, also show _info_ level messages by default.
+`RUST_LOG` 是设置 log 的环境变量名。
+`env_logger` 还包含一个构建器，因此你可以以编程的方式调整这些设置，
+例如，还默认显示 _info_ 级别的日志。
 
-There are a lot of alternative logging adapters out there,
-and also alternatives or extensions to `log`.
-If you know your application will have a lot to log,
-make sure to review them,
-and make your users' life easier.
+还有很多可选的日志适配器，以及日志库或其扩展。
+如果你确定你的应用将生成很多日志，请务必查看它们，以便解决发现的问题。
 
 <aside>
 
-**Tip:**
-Experience has shown that even mildly useful CLI programs can end up being used for years to come.
-(Especially if they were meant as a temporary solution.)
-If your application doesn't work
-and someone (e.g., you, in the future) needs to figure out why,
-being able to pass `--verbose` to get additional log output
-can make the difference between minutes and hours of debugging.
-The [clap-verbosity-flag] crate contains a quick way
-to add a `--verbose` to a project using `structopt`.
+**小技巧：**
+经验表明，即使是稍有用的 CLI 程序也可能在未来几年的时间里被使用。
+（特别是当它们是临时解决方案时）如果你的程序不能正常工作了，
+有人（可能是未来的你）需要去查明其原因，
+若能通过添加 `--verbose` 参数来获取更多额外的日志输出会大大减少调试时间。
+[clap-verbosity-flag] 箱提供了使用 `structop`
+将 `--verbose` 添加到项目中的便捷的方法。
 
 [clap-verbosity-flag]: https://crates.io/crates/clap-verbosity-flag
 
