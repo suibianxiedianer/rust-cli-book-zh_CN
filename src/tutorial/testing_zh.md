@@ -1,49 +1,31 @@
 # 测试
 
-Over decades of software development,
-people have discovered one truth:
-Untested software rarely works.
-(Many people would go as far as saying:
-"Most tested software doesn't work either."
-But we are all optimists here, right?)
-So, to ensure that your program does what you expect it to do,
-it is wise to test it.
+在数十年的软件开发中，人们发现了一个真理：未经测试的软件很难正常工作。
+（许多人也会说，经过测试的软件也可能不工作，但我们都是乐观主义者，不是么）
+所以，为了确保你的程序可如你预期的那样工作，最好先对其进行测试。
 
-One easy way to do that is
-to write a `README` file
-that describes what your program should do.
-And when you feel ready to make a new release,
-go through the `README` and ensure that
-the behavior is still as expected.
-You can make this a more rigorous exercise
-by also writing down how your program should react to erroneous inputs.
+一种简单的方式是在 `README` 文件中写明你的软件将如何工作。
+当你准备好进行一次新的发布时，再过一遍 `README` 的功能并确定其仍能正常工作。
+你还可以写入你的程序如何应对错误的输入，使得这个测试变得更加严格。
 
-Here's another fancy idea:
-Write that `README` before you write the code.
+另一个绝妙的主意是：在写代码前先写 `README`。
 
 <aside>
 
-**Aside:**
-Have a look at
-[test-driven development] (TDD)
-if you haven't heard of it.
+**注：**
+如果你没听过 [测试驱动开发] (TDD) 那么你最好去看一看它。
 
-[test-driven development]: https://en.wikipedia.org/wiki/Test-driven_development
+[测试驱动开发]: https://zh.wikipedia.org/wiki/Test-driven_development
 
 
 </aside>
 
-## Automated testing
+## 自动化测试
 
-Now, this is all fine and dandy,
-but doing all of this manually?
-That can take a lot of time.
-At the same time,
-many people have come to enjoy telling computers to do things for them.
-Let's talk about how to automate these tests.
+现在一切都妥了，但如果手动去完成测试，会耗费大量的时间。
+现在，人们更喜欢让计算机来协助完成这些工作，下面我们来谈谈自动化测试。
 
-Rust has a built-in test framework,
-so let's start by writing a first test:
+Rust 有内建的测试框架，让我们试着写出一个测试吧：
 
 ```rust,ignore
 #[test]
@@ -52,20 +34,16 @@ fn check_answer_validity() {
 }
 ```
 
-You can put this snippet of code in pretty much any file
-and `cargo test` will find
-and run it.
-The key here is the `#[test]` attribute.
-It allows the build system to discover such functions
-and run them as tests,
-verifying that they don't panic.
+你可以把这段代码放在几乎任何文件，`cargo test` 将运行它。
+这里的关键是 `#[test]` 属性。构建系统会寻找这类函数，并当作测试去运行它们，
+确认他们不会出错（panic）。
 
 <aside class="exercise">
 
-**Exercise for the reader:**
-Make this test work.
+**练习：**
+让这个测试能正常工作。
 
-You should end up with output like the following:
+完成后，测试的输出应该是这样的：
 
 ```text
 running 1 test
@@ -76,35 +54,26 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 
 </aside>
 
-Now that we've seen *how* we can write tests,
-we still need to figure out *what* to test.
-As you've seen it's fairly easy to write assertions
-for functions.
-But a CLI application is often more than one function!
-Worse, it often deals with user input,
-reads files,
-and writes output.
+现在我们已经了解了如何去编写测试项，那么下一个问题就是要测试什么？
+如你所见，为函数写断言非常简单。但 CLI 程序通常不止一个功能函数！
+更麻烦的是，它通常要处理用户的输入、读取文件并写入输出。
 
+## ?????
 ## Making your code testable
 
-There are two complementary approaches to testing functionality:
-Testing the small units that you build your complete application from,
-these are called "unit tests".
-There is also testing the final application "from the outside"
-called "black box tests" or "integration tests".
-Let's begin with the first one.
+测试功能有两种互补的方法：
+测试构建成完整程序的功能小单元，叫作“单元测试”。
+还有就是从外部测试最终的程序，称为“黑盒测试”或“集成测试”。
+让我们先从单元测试开始。
 
-To figure out what we should test,
-let's see what our program features are.
-Mainly, `grrs` is supposed to print out the lines that match a given pattern.
-So, let's write unit tests for _exactly this_:
-We want to ensure that our most important piece of logic works,
-and we want to do it in a way that is not dependent
-on any of the setup code we have around it
-(that deals with CLI arguments, for example).
+为了弄清楚我们要测试什么，让我们先看看我们程序的功能。
+`grrs` 应该打印出，文件中包含符合匹配字符串的行。
+所以，让我们给**匹配**功能写一个单元测试：
+我们希望确保我们最重要的逻辑部分能正常工作，
+并且以一种不依赖于任何需要设置代码、变量的方式实现（比如，处理 CLI 参数）。
 
-Going back to our [first implementation](impl-draft.md) of `grrs`,
-we added this block of code to the `main` function:
+回到我们的 `grrs` 的[第一个实现](impl-draft_zh.md)，
+当时我们在 `main` 函数中添加了如下代码块：
 
 ```rust,ignore
 // ...
@@ -115,9 +84,9 @@ for line in content.lines() {
 }
 ```
 
-Sadly, this is not very easy to test.
-First of all, it's in the main function, so we can't easily call it.
-This is easily fixed by moving this piece of code into a function:
+遗憾的是，这样的代码很难测试。
+首先，因为它在 `main` 函数中，所以我们不能简单的直接调用它。
+而把这段代码移动到一个函数中，就可以很简单地解决这个问题了：
 
 ```rust,no_run
 fn find_matches(content: &str, pattern: &str) {
@@ -129,8 +98,7 @@ fn find_matches(content: &str, pattern: &str) {
 }
 ```
 
-Now we can call this function in our test,
-and see what its output is:
+现在我们可以在测试中调用这个函数了，让我们来看一下它的输出是什么：
 
 ```rust,ignore
 #[test]
@@ -139,103 +107,62 @@ fn find_a_match() {
     assert_eq!( // uhhhh
 ```
 
-Or… can we?
-Right now, `find_matches` prints directly to `stdout`, i.e., the terminal.
-We can't easily capture this in a test!
-This is a problem that often comes up
-when writing tests after the implementation:
-We have written a function that is firmly integrated
-in the context it is used in.
+或者，我们还不能……现在，`find_matches` 会直接将输出打印到 `stdout`，比如在终端。
+我们不能简单地在测试中捕获它的输出！
+这是在实现功能后再编写测试时经常遇到的问题：
+我们编写了一个牢固地集成在它所使用的上下文中的函数。
 
 <aside class="note">
 
-**Note:**
-This is totally fine when writing small CLI applications.
-There's no need to make everything testable!
-It is important to think about
-which parts of your code you might want to write unit tests for, however.
-While we'll see that it's easy to change this function to be testable,
-this is not always the case.
+**注：**
+这在编写一个小的 CLI 程序时问题不大。没必要去测试每个功能！
+但重要的是要想清楚，哪些代码是需要去编写单元测试的。
+虽然下面我们可以轻易的将这个函数修改为可测试的，但事情并非总是如此美好。
 
 </aside>
 
-Alright, how can we make this testable?
-We'll need to capture the output somehow.
-Rust's standard library has some neat abstractions
-for dealing with I/O (input/output)
-and we'll make use of one called [`std::io::Write`].
-This is a [trait][trpl-traits] that abstracts over things we can write to,
-which includes strings but also `stdout`.
+那么，我们怎样才能让这个函数变得可测呢？我们得能获取它的输出。
+Rust 的标准库有一些简单的抽象来处理 I/O，在这里我们将使用 [`std::io::Write`]。
+这是一个 [trait][trpl-traits]，
+它可以抽象我们可以写入的事物，包括字符串和标准输出。
 
 [trpl-traits]: https://doc.rust-lang.org/book/ch10-02-traits.html
 [`std::io::Write`]: https://doc.rust-lang.org/1.39.0/std/io/trait.Write.html
 
-If this is the first time you've heard "trait"
-in the context of Rust,
-you are in for a treat.
-Traits are one of the most powerful features of Rust.
-You can think of them like interfaces in Java,
-or type classes in Haskell
-(whatever you are more familiar with).
-They allow you to abstract over behavior
-that can be shared by different types.
-Code that uses traits can
-express ideas in very generic and flexible ways.
-This means it can also get difficult to read, though.
-Don't let that intimidate you:
-Even people who have used Rust for years
-don't always get what generic code does immediately.
-In that case,
-it helps to think of concrete uses.
-For example,
-in our case,
-the behavior that we abstract over is "write to it".
-Examples for the types that implement ("impl") it
-include:
-The terminal's standard output,
-files,
-a buffer in memory,
-or TCP network connections.
-(Scroll down in the [documentation for `std::io::Write`][`std::io::Write`]
-to see a list of "Implementors".)
+如果你是第一次在 Rust 中看到 “trait” 这个词，也没关系。
+特性（trait）是 Rust 最强大的特性之一。
+你可以把它看成 Java 中的接口，或 Haskell 的 type classes（看你了解哪个）。
+它允许你抽象可由不同类型共享的行为。
+使用 trait 的代码可以以非常通用和灵活的方式来实现功能，
+但这也意味着它可能难以阅读。
+但请不要被它吓到：即使是 Rust 中的老手也不一定能马上理解通用代码的作用。
+在这种情况下，考虑具体用途会有所帮助。
+比如，现在，我们抽象的行为是“写入”。实现了（“impl”）了它的类型有：
+终端的标准输出、文件、内存中的缓存或 TCP 网络连接。
+（在[`std::io::Write` 文档][`std::io::Write`] 中下翻可查看实现此 trait 的列表）
 
-With that knowledge,
-let's change our function to accept a third parameter.
-It should be of any type that implements `Write`.
-This way,
-we can then supply a simple string
-in our tests
-and make assertions on it.
-Here is how we can write this version of `find_matches`:
+有了这些知识，让我们修改函数以便接受第三个参数。它应该是一个实现了 `Write`
+的类型。这样，我们就可以在测试中提供一个简单的字符串并对其进行断言。
+这是我们的 `find_matches` 的新版本：
 
 ```rust,ignore
 {{#include testing/src/main.rs:24:30}}
 ```
 
-The new parameter is `mut writer`,
-i.e., a mutable thing we call "writer".
-Its type is `impl std::io::Write`,
-which you can read as
-"a placeholder for any type that implements the `Write` trait".
-Also note how we
-replaced the `println!(…)`
-we used earlier
-with `writeln!(writer, …)`.
-`println!` works the same as `writeln!`
-but always uses standard output.
+第三个参数是 `mut writer`，即一个名为 `writer` 的可变变量。
+它的类型是 `impl std::io::Write`，你可理解为“实现了 `Write` trait 的任意类型”。
+还要注意，我们使用 `writeln!(writer, …)` 替换了之前的 `println!(…)`。
+`println!` 的行为类似于 `writeln!`，只不过它总是写入到标准输出里。
 
-Now we can test for the output:
+现在我们可以测试它的输出了：
 
 ```rust,ignore
 {{#include testing/src/main.rs:32:37}}
 ```
 
-To now use this in our application code,
-we have to change the call to `find_matches` in `main`
-by adding [`&mut std::io::stdout()`][stdout] as the third parameter.
-Here's an example of a main function
-that builds on what we've seen in the previous chapters
-and uses our extracted `find_matches` function:
+现在我们必须修改 `main` 函数中对 `find_matches` 的调用，给它加
+[`&mut std::io::stdout()`][stdout] 作为第三个参数。
+下面是修改完成之后，使用新版 `find_matches` 的 `mian` 函数：
 
 ```rust,ignore
 {{#include testing/src/main.rs:14:22}}
@@ -245,36 +172,30 @@ and uses our extracted `find_matches` function:
 
 <aside class="note">
 
-**Note:**
-Since `stdout` expects bytes (not strings),
-we use `std::io::Write` instead of `std::fmt::Write`.
-As a result,
-we give an empty vector as "writer" in our tests
-(its type will be inferred to `Vec<u8>`),
-in the `assert_eq!` we use a `b"foo"`.
-(The `b` prefix makes this a _byte string literal_
-so its type is going to be `&[u8]` instead of `&str`).
+**注：**
+由于 `stdout` 接收的是字节（而不是字符串）,
+所以我们使用 `std::io::Write` 而不是 `std::fmt::Write`。
+因此，我们在测试中传入了一个空的 vector 作为 “writer”
+（它会被判断为 `Vec<u8>`），在 `assert_eq` 中我们使用 `b"foo"`。
+（`b` 使得它被当作 _byte 字节_，即其类型为 `&[u8]` 而非 `&str`。
 
 </aside>
 
 <aside class="note">
 
-**Note:**
-We could also make this function return a `String`,
-but that would change its behavior.
-Instead of writing to the terminal directly,
-it would then collect everything into a string,
-and dump all the results in one go at the end.
+**注：**
+我们也可以让这个函数（`find_matches`）返回一个 `String`，
+但这样就改变了它的行为。即它不会直接将结果写入终端，
+而是将所有的匹配行收集为一个字符串，并在最后返回一个结果。
 
 </aside>
 
 <aside class="exercise">
 
-**Exercise for the reader:**
-[`writeln!`] returns an [`io::Result`]
-because writing can fail,
-for example when the buffer is full and cannot be expanded.
-Add error handling to `find_matches`.
+**练习：**
+[`writeln!`] 返回值是 [`io::Result`]，因为写入可能会失败，
+例如缓存被用尽又无法申请新空间时。
+请在 `find_matches` 添加上错误处理。
 
 [`writeln!`]: https://doc.rust-lang.org/1.39.0/std/macro.writeln.html
 [`io::Result`]: https://doc.rust-lang.org/1.39.0/std/io/type.Result.html
