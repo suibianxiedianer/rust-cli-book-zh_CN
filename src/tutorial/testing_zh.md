@@ -58,8 +58,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 如你所见，为函数写断言非常简单。但 CLI 程序通常不止一个功能函数！
 更麻烦的是，它通常要处理用户的输入、读取文件并写入输出。
 
-## ?????
-## Making your code testable
+## 编写可测试的代码
 
 测试功能有两种互补的方法：
 测试构建成完整程序的功能小单元，叫作“单元测试”。
@@ -202,132 +201,92 @@ Rust 的标准库有一些简单的抽象来处理 I/O，在这里我们将使�
 
 </aside>
 
-We've just seen how to make this piece of code easily testable.
-We have
+我们刚刚学习了如何使一段代码变得易于测试。我们做了：
 
-1. identified one of the core pieces of our application,
-2. put it into its own function,
-3. and made it more flexible.
+1. 找到程序中的一段核心代码，
+2. 将它封装到一个独立的函数中，
+3. 让它的使用方法变得更为灵活。
 
-Even though the goal was to make it testable,
-the result we ended up with
-is actually a very idiomatic and reusable piece of Rust code.
-That's awesome!
+尽管我们的目标仅仅是让它具有可测试性，
+但我们最终得到了一段符合 Rust 语言风格且可被复用的代码，这非常棒！
 
-## Splitting your code into library and binary targets
+## 将代码拆分为库和二进制
 
-We can do one more thing here.
-So far we've put everything we wrote into the `src/main.rs` file.
-This means our current project produces a single binary.
-But we can also make our code available as a library, like this:
+这里我们还需要做一些事情。到目前为止我们将所有的代码写到了 `src/main.rs` 里。
+这意味着我们的项目只会编译成一个单独的二进制程序。
+但我们也可以将我们的代码作为库提供，像这样：
 
-1. Put the `find_matches` function into a new `src/lib.rs`.
-2. Add a `pub` in front of the `fn` (so it's `pub fn find_matches`)
-   to make it something that users of our library can access.
-3. Remove `find_matches` from `src/main.rs`.
-4. In the `fn main`, prepend the call to `find_matches` with `grrs::`,
-   so it's now `grrs::find_matches(…)`.
-   This means it uses the function from the library we just wrote!
+1. 将 `find_matches` 函数放到新的 `src/lib.rs` 文件中。
+2. 在函数名前（`fn`）添加上 `pub` 标记（现在函数为 `pub fn find_matches`）
+   以便这个库的使用者可以访问这个函数。
+3. 将 `src/main.rs` 中的 `find_matches` 函数移除。
+4. 在 `fn main` 中使用 `grrs::find_matches` 去调用我们在库中的 `find_matches`
+   函数。
 
-The way Rust deals with projects is quite flexible
-and it's a good idea to think about
-what to put into the library part of your crate early on.
-You can for example think about writing a library
-for your application-specific logic first
-and then use it in your CLI just like any other library.
-Or, if your project has multiple binaries,
-you can put the common functionality into the library part of that crate.
+Rust 处理项目的方式非常灵活，尽早地考虑清楚哪些功能要放到库中是个好主意。
+例如，你可以考虑先为用于特定程序的逻辑编写一个库，然后像调用任意其它库一样，
+在你的 CLI 程序中使用它。又或者，若你的项目会生成多个二进制程序，
+你可以将其通用的功能放到库里，提高代码的复用性。
 
 <aside class="note">
 
-**Note:**
-Speaking of putting everything into a `src/main.rs`:
-If we continue to do that,
-it'll become difficult to read.
-The [module system] can help you structure and organize your code.
+**注：**
+如果将所有的代码都放到 `src/main.rs` 里，这会让我们的代码变得难以阅读。
+查看 [module system] 可以帮助你去构建、组织你的代码结构。
 
 [module system]: https://doc.rust-lang.org/1.39.0/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html
 
 </aside>
 
 
-## Testing CLI applications by running them
+## 通过运行 CLI 程序来测试它们
 
-Thus far, we've gone out of our way
-to test the _business logic_ of our application,
-which turned out to be the `find_matches` function.
-This is very valuable
-and is a great first step
-towards a well-tested code base.
-(Usually, these kinds of tests are called "unit tests".)
+到目前为止，我们已经测试了我们程序中的_业务逻辑_，即 `find_matches` 函数。
+这是非常有价值的，并且是迈向实现经过良好测试的代码的第一步。
+（通常，这类测试被称为“单元测试”）
 
-There is a lot of code we aren't testing, though:
-Everything that we wrote to deal with the outside world!
-Imagine you wrote the main function,
-but accidentally left in a hard-coded string
-instead of using the argument of the user-supplied path.
-We should write tests for that, too!
-(This level of testing is often called
-"integration testing", or "system testing".)
+但还有许多代码是我们没有测试到的，因为：
+我们写的一切都是为了与外界打交道！
+想像一下，在你写 `main` 函数时，不小心留下了一段硬编码的路径字符串，
+软件运行时会使用它而非用户提供的参数！
+我们也需要编写这类的测试！（这个级别的测试一般被称为“集成测试”或“系统测试”）
 
-At its core,
-we are still writing functions
-and annotating them with `#[test]`.
-It's just a matter of what we do inside these functions.
-For example, we'll want to use the main binary of our project,
-and run it like a regular program.
-We will also put these tests into a new file in a new directory:
-`tests/cli.rs`.
+从本质上讲，我们仍要编写函数并使用 `#[test]` 注释它们。
+现在的问题是我们要在这些函数中做什么？
+例如，我们想像运行一个普通程序一样使用我们项目的主程序。
+我们还要将这些测试放入到一个全新的路径下：`tests/cli.rs`。
 
 <aside>
 
-**Aside:**
-By convention,
-`cargo` will look for integration tests in the `tests/` directory.
-Similarly,
-it will look for benchmarks in `benches/`,
-and examples in `examples/`.
-These conventions also extend to your main source code:
-libraries have a `src/lib.rs` file,
-the main binary is `src/main.rs`,
-or, if there are multiple binaries,
-cargo expects them to be in `src/bin/<name>.rs`.
-Following these conventions will make your code base more discoverable
-by people used to reading Rust code.
+**注：**
+依约定，`cargo` 会在 `tests/` 目录中查找集成测试。
+同样，它会在 `benches/` 目录寻找 benchmarks，在 `examples/` 中寻找示例。
+这些约定也扩展到你的主要源代码：
+库有一个 `src/libs.rs` 文件，主程序是 `src/main.rs`，
+如果这里有多个二进制程序，`cargo` 期望它们放在 `src/bin/<name>.rs` 中。
+遵循这些约定可以让你的代码对于习惯阅读 Rust 代码的人更为友好。
 
 </aside>
 
-To recall,
-`grrs` is a small tool that searches for a string in a file.
-We have previously tested that we can find a match.
-Let's think about what other functionality we can test.
+回想一下，`grrs` 是一个在文件中搜索字符串的小工具。
+我们已经测试过了查找匹配项功能。让我们再想想还能测试哪些功能。
 
-Here is what I came up with.
+这里我想到了一些。
 
-- What happens when the file doesn't exist?
-- What is the output when there is no match?
-- Does our program exit with an error when we forget one (or both) arguments?
+- 如果文件不存在会怎样？
+- 当没有搜索到匹配项时返回什么？
+- 当我们少写一个（或都没写）参数时，我们的程序会以错误状态退出？
 
-These are all valid test cases.
-Additionally,
-we should also include one test case
-for the "happy path",
-i.e., we found at least one match
-and we print it.
+这些都是有效的测试用例。
+此外，我们还应该有一个成功的测试用例，即程序正常运行且找到至少一个匹配并打印。
 
-To make these kinds of tests easier,
-we're going to use the [`assert_cmd`] crate.
-It has a bunch of neat helpers
-that allow us to run our main binary
-and see how it behaves.
-Further,
-we'll also add the [`predicates`] crate
-which helps us write assertions
-that `assert_cmd` can test against
-(and that have great error messages).
-We'll add those dependencies not to the main list,
-but to a "dev dependencies" section in our `Cargo.toml`.
-They are only required when developing the crate,
+为了让这类的测试更容易，我们将使用到 [`assert_cmd`] 箱。
+它提供了许多简洁的帮助程序，可以让我们运行我们的主程序并查看它的行为。
+此外，我们还将添加 [`predicates`] 箱，
+来帮助我们为 `assert_cmd` 的测试项编写断言（且具有很棒的错误消息）。
+我们不会将这些依赖放到程序的主依赖中，
+而是放到 `Cargo.toml` 的 `dev dependencies` 部分。
+它们只会在开发时被使用到，而使用时则不会。
 not when using it.
 
 ```toml
@@ -337,22 +296,17 @@ not when using it.
 [`assert_cmd`]: https://docs.rs/assert_cmd
 [`predicates`]: https://docs.rs/predicates
 
-This sounds like a lot of setup.
-Nevertheless –
-let's dive right in
-and create our `tests/cli.rs` file:
+设置完成后，让我们来创建我们的 `tests/cli.rs` 文件：
 
 ```rust,ignore
 {{#include testing/tests/cli.rs:1:15}}
 ```
 
-You can run this test with
-`cargo test`,
-just the tests we wrote above.
-It might take a little longer the first time,
-as `Command::cargo_bin("grrs")` needs to compile your main binary.
+你可以像我们之前做测试时一样，通过运行 `cargo test` 来运行这个测试。
+在第一次运行时可能会稍慢，因为我们要编译出项目的主程序，它在
+`Command::cargo_bin("grrs")` 被调用。
 
-## Generating test files
+## 生成测试文件
 
 The test we've just seen only checks that our program writes an error message
 when the input file doesn't exist.
