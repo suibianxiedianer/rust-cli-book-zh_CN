@@ -308,26 +308,17 @@ not when using it.
 
 ## 生成测试文件
 
-The test we've just seen only checks that our program writes an error message
-when the input file doesn't exist.
-That's an important test to have,
-but maybe not the most important one:
-Let's now test that we will actually print the matches we found in a file!
+我们刚编写的测试，只会在检查我们的程序的输入的文件参数不存在时输出的错误信息。
+这是很重要的一个测试项，却不是最重要的：
+让我们测试下，正确运行程序并打印出文件中匹配项的用例。
 
-We'll need to have a file whose content we know,
-so that we can know what our program _should_ return
-and check this expectation in our code.
-One idea might be to add a file to the project with custom content
-and use that in our tests.
-Another would be to create temporary files in our tests.
-For this tutorial,
-we'll have a look at the latter approach.
-Mainly, because it is more flexible and will also work in other cases;
-for example, when you are testing programs that change the files.
+首先我们要有一个已知内容的文件，这样我们才能确认正确的输出是什么从而进行测试。
+当然我们可以在项目中添加一个文件专门用来进行测试，或者也可以创建临时文件来测试。
+在本教程中，我们选择后面一种做法。因为它相对更为灵活且也适用于其它测试用例；
+比如，当你要测试去修改一个文件的时候。
 
-To create these temporary files,
-we'll be using the [`assert_fs`] crate.
-Let's add it to the `dev-dependencies` in our `Cargo.toml`:
+为了生成这些临时文件，我们要使用到 [`assert_fs`] 箱，
+让我们把它添加到 `Cargo.toml` 的 `dev-dependencies` 中。
 
 ```toml
 {{#include testing/Cargo.toml:14}}
@@ -335,16 +326,9 @@ Let's add it to the `dev-dependencies` in our `Cargo.toml`:
 
 [`assert_fs`]: https://docs.rs/assert_fs
 
-Here is a new test case
-(that you can write below the other one)
-that first creates a temp file
-(a "named" one so we can get its path),
-fills it with some text,
-and then runs our program
-to see if we get the correct output.
-When the `file` goes out of scope
-(at the end of the function),
-the actual temporary file will automatically get deleted.
+这就是新的测试用例，首先去创建一个临时文件（并获取到它的路径），
+然后在里面填充一些内容，再去运行我们的程序来检查我们能否获得正确的输出。
+当执行完这个代码后，`file` 将自动被删除。
 
 ```rust,ignore
 {{#include testing/tests/cli.rs:17:32}}
@@ -352,49 +336,39 @@ the actual temporary file will automatically get deleted.
 
 <aside class="exercise">
 
-**Exercise for the reader:**
-Add integration tests for passing an empty string as pattern.
-Adjust the program as needed.
+**练习：**
+添加一个传入的匹配项为空字符串的集成测试，并按需去调整程序。
 
 </aside>
 
+## 去测试什么？
 ## What to test?
 
-While it can certainly be fun to write integration tests,
-it will also take some time to write them,
-as well as to update them when your application's behavior changes.
-To make sure you use your time wisely,
-you should ask yourself what you should test.
+虽然编写集成测试很有意思，但毕竟编写测试是要消耗时间的，
+而且当你的程序行为有所变动时可能也需要去更新这些测试。
+为了让我们花费的时间变得更有意义，我们应该问下自己，我们要测试什么？
 
-In general it's a good idea to write integration tests
-for all types of behavior that a user can observe.
-That means that you don't need to cover all edge cases:
-It usually suffices to have examples for the different types
-and rely on unit tests to cover the edge cases.
+一般来讲，为用户可以观察到的所有类型的行为编写集成测试是一个好主意。
+这意味着你不需要去涵盖所有的边界情况：通常会有不同类型的示例，
+再依赖于单元测试即可覆盖边界情况。
 
-It is also a good idea not to focus your tests on things you can't actively control.
-It would be a bad idea to test the exact layout of `--help`
-as it is generated for you.
-Instead, you might just want to check that certain elements are present.
+同样，尝试去测试你不能掌控的东西，并不是一个好主意。
+测试 `--help` 的确切输出布局，会是一个坏主意，
+相反，你可能只想检查其中某些元素是否存在。
 
-Depending on the nature of your program,
-you can also try to add more testing techniques.
-For example,
-if you have extracted parts of your program
-and find yourself writing a lot of example cases as unit tests
-while trying to come up with all the edge cases,
-you should look into [`proptest`].
-If you have a program which consumes arbitrary files and parses them,
-try to write a [fuzzer] to find bugs in edge cases.
+根据程序的特性，你还可以尝试添加更多的测试技术。
+比如，当你尝试去测试到所有的边界情况时，如果你提取了你程序的一部分，
+并且发现你已经写了许多作为单元测试的示例情景，你可以看看 [`proptest`]。
+如果你的程序会使用任意一个文件并解析它们，请试着写一个 [fuzzer]
+来查找边界条件下的 bugs。
 
 [`proptest`]: https://docs.rs/proptest
 [fuzzer]: https://rust-fuzz.github.io/book/introduction.html
 
 <aside>
 
-**Aside:**
-You can find the full, runnable source code used in this chapter
-[in this book's repository][src].
+**注：**
+你可以在[这里][src] 看到完整、可运行的源码。
 
 [src]: https://github.com/rust-cli/book/tree/master/src/tutorial/testing
 

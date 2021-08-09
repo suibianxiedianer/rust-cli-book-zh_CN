@@ -1,44 +1,31 @@
-# Packaging and distributing a Rust tool
+# 打包并发布一个 Rust 工具
 
-If you feel confident that your program is ready for other people to use,
-it is time to package and release it!
+如果你确信你的程序已经准备好提供给其它人使用了，那么是时候打包并发布它了！
 
-There are a few approaches,
-and we'll look at three of them
-from "quickest to set up" to "most convenient for users".
+我们可以有许多种办法，现在我们从“最快设置”到“对用户最方便”看其中的三种。
 
-## Quickest: `cargo publish`
+## 最快的方法：`cargo publish`
 
-The easiest way to publish your app is with cargo.
-Do you remember how we added external dependencies to our project?
-Cargo downloaded them from its default "crate registry", [crates.io].
-With `cargo publish`,
-you too can publish crates to [crates.io].
-And this works for all crates,
-including those with binary targets.
+发布你的程序最简单的办法就是使用 cargo。
+你还记得我们怎么往我们的项目中添加依赖么？
+cargo 从默认的 “crate 仓库”[crates.io] 下载它们。
+使用 `cargo publish`，你可以在 [crates.io] 上发布你的 crate。
+这适用于包括二进制程序在内的所有 crates。
 
-Publishing a crate to [crates.io] is pretty straightforward:
-If you haven't already, create an account on [crates.io].
-Currently, this is done via authorizing you on GitHub,
-so you'll need to have a GitHub account
-(and be logged in there).
-Next, you log in using cargo on your local machine.
-For that, go to your
-[crates.io account page],
-create a new token,
-and then run `cargo login <your-new-token>`.
-You only need to do this once per computer.
-You can learn more about this
-in cargo's [publishing guide].
+如果你已经在 [crates.io] 上创建了一个账号，
+那么在上面发布一个 crate 是非常简单的。
+目前，它是通过 GitHub 来认证的，所以你需要一个 GitHub 账号,
+并在 [crates.io] 上登录。然后，你需要在你本地的机器上登录（终端登录）。
+然后，[crates.io] 的账号设置页面，生成一个新的 token，
+在你的本地终端运行 `cargo login <your-new-token>`。
+每台机器上只需运行一次即可一直使用。
+有兴趣可以去看 cargo 的 [publishing guide] 
 
-Now that cargo as well as crates.io know you,
-you are ready to publish crates.
-Before you hastily go ahead and publish a new crate (version),
-it's a good idea to open your `Cargo.toml` once more
-and make sure you added the necessary metadata.
-You can find all the possible fields you can set
-in the documentation for [cargo's manifest format].
-Here's a quick overview of some common entries:
+现在你已经了解了 cargo 和 crates.io，可以去发布你的 crate 了。
+在你急急忙忙地想着发布一个新的（或更新版本）crate 前，
+你最好打开 `Cargo.toml` 并检查是否提供了必要的元数据。
+你可以在 [cargo's manifest format] 的文档中找到所有需要设置的字段，
+下面展示了其中的常见条件：
 
 ```toml
 [package]
@@ -56,14 +43,12 @@ categories = ["command-line-utilities"]
 
 <aside class="note">
 
-**Note:**
-This example includes the mandatory license field
-with a common choice for Rust projects:
-The same license that is also used for the compiler itself.
-It also refers to a `README.md` file.
-It should include a quick description of what your project is about,
-and will be included not only on the crates.io page of your crate,
-but also what GitHub shows by default on repository pages.
+**注：**
+这个示例包括了必须的 license 字段，它选择了 Rust 项目中常见的许可证，
+编译器本身也是使用的这个 license。
+它还引用了 `README.md` 文件。
+它应该包括一个对你的项目的简单描述信息，这个信息不仅会显示在 crates.io
+上你的 crate 页面中，还在会 GitHub 仓库页面显示。
 
 </aside>
 
