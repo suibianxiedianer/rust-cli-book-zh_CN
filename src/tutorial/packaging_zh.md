@@ -57,100 +57,57 @@ categories = ["command-line-utilities"]
 [publishing guide]: https://doc.rust-lang.org/1.39.0/cargo/reference/publishing.html
 [cargo's manifest format]: https://doc.rust-lang.org/1.39.0/cargo/reference/manifest.html
 
-### How to install a binary from crates.io
+### 如何从 crates.io 上安装程序
 
-We've seen how to publish a crate to crates.io,
-and you might be wondering how to install it.
-In contrast to libraries,
-which cargo will download and compile for you
-when you run `cargo build` (or a similar command),
-you'll need to tell it to explicitly install binaries.
+我们刚刚学习了如何在 crates.io 上发布一个 crate，那么又如何去安装它呢？
 
-This is done using
-`cargo install <crate-name>`.
-It will by default download the crate,
-compile all the binary targets it contains
-(in "release" mode, so it might take a while)
-and copy them into the `~/.cargo/bin/` directory.
-(Make sure that your shell knows to look there for binaries!)
+我们同样可以使用 cargo 命令，运行 `cargo install <crate-name>`。
+它默认会下载这个 crate，编译其中所有的二进制程序（使用 release 模式，
+所以可能会稍慢）并将程序拷贝到 `~/.cargo/bin` 目录。
+（需确保你的 PATH 中有这个路径，才可正常使用安装的命令）
 
-It's also possible to
-install crates from git repositories,
-only install specific binaries of a crate,
-and specify an alternative directory to install them to.
-Have a look at `cargo install --help` for details.
+我们还可以直接在源码仓库下安装程序，使用这种文件可以指定安装哪些二进制程序，
+及程序安装到什么位置。详情可查看 `cargo install --help`。
 
-### When to use it
+### 什么时候使用它
 
-`cargo install` is a simple way to install a binary crate.
-It's very convenient for Rust developers to use,
-but has some significant downsides:
-Since it will always compile your source from scratch,
-users of your tool will need to have
-Rust, cargo, and all other system dependencies your project requires
-to be installed on their machine.
-Compiling large Rust codebases can also take some time.
+使用 `cargo install` 可以很方便的安装一个 crate 程序。
+但你需要了解到它的几个不足之处：
+因为它总是会从头开始编译你的源码，所以使用你的工具的用户，
+在他们的机器上需要安装上 Rust，Cargo 及其它所需的依赖。
+而且编译一个大型的 Rust 代码库也需要较长的时间。
 
-It's best to use this for distributing tools
-that are targeted at other Rust developers.
-For example:
-A lot of cargo subcommands
-like `cargo-tree` or `cargo-outdated`
-can be installed with it.
+最好使用它来分发面向其它 Rust 开发者的工具。
+比如，许多 cargo 的子命令，
+像 `cargo-tree` 或 `cargo-outdated` 可以使用这种方法来安装。
 
-## Distributing binaries
+## 发布二进制程序
 
-Rust is a language that compiles to native code
-and by default statically links all dependencies.
-When you run `cargo build`
-on your project that contains a binary called `grrs`,
-you'll end up with a binary file called `grrs`.
-Try it out:
-Using `cargo build`, it'll be `target/debug/grrs`,
-and when you run `cargo build --release`, it'll be `target/release/grrs`.
-Unless you use crates
-that explicitly need external libraries to be installed on the target system
-(like using the system's version of OpenSSL),
-this binary will only depend on common system libraries.
-That means,
-you take that one file,
-send it to people running the same operating system as you,
-and they'll be able to run it.
+Rust 会默认编译出使用静态链接的机器代码。
+当你运行 `cargo build`时，若你的项目中有包含一个叫 `grrs` 的二进制 target，
+你将得到一个叫 `grrs` 的二进制文件。
+来试试吧：使用 `cargo build`，二进制文件在 `target/debug/grrs`，
+若使用 `cargo build --release` 则生成的文件在 `target/release/grrs`。
+除非你使用的 crates 中明确地说明了需要在目标系统上安装外部依赖库
+（如需要使用系统提供的 OpenSSL），否则这个二进制文件只会依赖于通用系统库。
+这意味着，将此二进制程序拷贝到任何相同的操作系统上，它都能完美地运行！
 
-This is already very powerful!
-It works around two of the downsides we just saw for `cargo install`:
-There is no need to have Rust installed on the user's machine,
-and instead of it taking a minute to compile,
-they can instantly run the binary.
+这已经很强大了！它解决了我们刚刚提到的，关于 `cargo isntall` 的两个不足：
+它不需要用户的机器上安装 Rust，也不需要再去编译而可直接运行。
 
-So, as we've seen,
-`cargo build` _already_ builds binaries for us.
-The only issue is,
-those are not guaranteed to work on all platforms.
-If you run `cargo build` on your Windows machine,
-you won't get a binary that works on a Mac by default.
-Is there a way to generate these binaries
-for all the interesting platforms
-automatically?
+所以，`cargo build` _已经_为我们编译出了二进制程序。现在唯一的问题是，
+还不能保证其可在所有的平台上都可用。如果你在 Windows 上运行 `cargo build`，
+你并不会得到一个可在 Mac 上运行程序。
+那么有没有办法为所有的常见平台自动生成这些二进制程序呢？
 
-### Building binary releases on CI
+### 使用 CI 构建二进制版本
 
-If your tool is open sourced
-and hosted on GitHub,
-it's quite easy to set up a free CI (continuous integration) service
-like [Travis CI].
-(There are other services that also work on other platforms, but Travis is very popular.)
-This basically runs setup commands
-in a virtual machine
-each time you push changes to your repository.
-What those commands are,
-and the types of machines they run on,
-is configurable.
-For example:
-A good idea is to run `cargo test`
-on a machine with Rust and some common build tools installed.
-If this fails,
-you know there are issues in the most recent changes.
+如果你的工具已经开源且托管在 GitHub 上，可以非常容易地设置一个免费的 CI
+（持续集成）—— [Travis CI]。（或其它平台上使用其它的服务，Travis 是最受欢迎的）
+在你每次 push 新代码到你的仓库时，它会在一个虚拟机上运行设置命令。
+至于是执行什么命令，或使用哪种虚拟机，这都是可以配置的。
+比如，在一个安装了 Rust 和常用构建工具的机器上，执行 `cargo test` 是一个好主意。
+如果这个命令失败了，你就知道最近的提交的代码是有问题的。
 
 [Travis CI]: https://travis-ci.com/
 
