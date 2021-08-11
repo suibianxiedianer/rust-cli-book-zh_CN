@@ -111,171 +111,115 @@ Rust 会默认编译出使用静态链接的机器代码。
 
 [Travis CI]: https://travis-ci.com/
 
-We can also use this
-to build binaries and upload them to GitHub!
-Indeed, if we run
-`cargo build --release`
-and upload the binary somewhere,
-we should be all set, right?
-Not quite.
-We still need to make sure the binaries we build
-are compatible with as many systems as possible.
-For example,
-on Linux we can compile not for the current system,
-but instead for the `x86_64-unknown-linux-musl` target,
-to not depend on default system libraries.
-On macOS, we can set `MACOSX_DEPLOYMENT_TARGET` to `10.7`
-to only depend on system features present in versions 10.7 and older.
+我们还可以使用它还构建二进制程序并上传到 GitHub 上！
+那么，如果我们使用 `cargo build --release` 生成并将程序上传到某个地方，
+就一切 OK 了么？也不尽然，我们需要确保我们的程序适用于尽可能多的系统。
+比如，在 Linux 上我们可以不为当前系统编译，而是针对 `x86_64-unknown-linux-musl`
+编译，从而使程序不依赖于默认的系统库。
+在 macOS 上，我们可以设置 `MACOSX_DEPLOYMENT_TARGET` 为 `10.7`，
+使得程序只会依赖于 10.7 及其之后版本上存在的系统功能。
 
-You can see one example of building binaries using this approach
-[here][wasm-pack-travis] for Linux and macOS
-and [here][wasm-pack-appveyor] for Windows (using AppVeyor).
+你可以在[这儿][wasm-pack-travis]看到使用此方法在 Linux 和 macOS 上编译的例子，
+若使用 Windows，请看[这个][wasm-pack-appveyor]（使用 AppVeyor）。
 
 [wasm-pack-travis]: https://github.com/rustwasm/wasm-pack/blob/51e6351c28fbd40745719e6d4a7bf26dadd30c85/.travis.yml#L74-L91
 [wasm-pack-appveyor]: https://github.com/rustwasm/wasm-pack/blob/51e6351c28fbd40745719e6d4a7bf26dadd30c85/.appveyor.yml
 
-Another way is to use pre-built (Docker) images
-that contain all the tools we need
-to build binaries.
-This allows us to easily target more exotic platforms, too.
-The [trust] project contains
-scripts that you can include in your project
-as well as instructions on how to set this up.
-It also includes support for Windows using AppVeyor.
+另一种方法是使用包含我们编译程序所需要到的所有工具的 pre-built (Docker) 镜像。
+这也使我们能够轻松地编译适配于更多不同的平台。
+在[trust] 项目中包含可以在你的项目中使用的脚本及其如何设置使用的说明。
+它还支持使用 AppVeyor 的 Windows 系统。
 
-If you'd rather set this up locally
-and generate the release files on your own machine,
-still have a look at trust.
-It uses [cross] internally,
-which works similar to cargo
-but forwards commands to a cargo process inside a Docker container.
-The definitions of the images are also available in
-[cross' repository][cross].
+如果你更愿意在本地设置，并在本机上生成要发布的文件，你也可以看看 trust。
+它在里面使用了 [cross]，cross 的工作原理类似于 cargo，
+它会将命令转发到 Docker 容器中的 cargo 进程。
+此镜像的定义相关可在其仓库查看 [cross' repository][cross]。
 
 [trust]: https://github.com/japaric/trust
 [cross]: https://github.com/rust-embedded/cross
 
-### How to install these binaries
+### 如何安装这些二进制程序
 
-You point your users to your release page
-that might look something [like this one][wasm-pack-release],
-and they can download the artifacts we've just created.
-The release artifacts we've just generated are nothing special:
-At the end, they are just archive files that contain our binaries!
-This means that users of your tool
-can download them with their browser,
-extract them (often happens automatically),
-and copy the binaries to a place they like.
+你的发布页面也许是像[这样][wasm-pack-release]的，
+用户可以在这个页面下载我们刚生成的文件。
+我们刚刚生成的发布文件没什么特别的：它们只是一个包括我们的二进制程序的压缩包！
+这意味着你的工具的用户可以从浏览器上下载、解压，并将程序拷贝到任何地方。
 
 [wasm-pack-release]: https://github.com/rustwasm/wasm-pack/releases/tag/v0.5.1
 
-This does require some experience with manually "installing" programs,
-so you want to add a section to your README file
-on how to install this program.
+这需要用户有手动安装程序的经验，所以你最好在你的 README 文件中加上安装方法说明。
 
 <aside class="note">
 
-**Note:**
-If you used [trust] to build your binaries and added them to GitHub releases,
-you can also tell people to run
+**注：**
+如果你使用 [trust] 构建你的程序并在 GitHub releases 上发布，
+你还可以告诉你的用户来运行
 `curl -LSfs https://japaric.github.io/trust/install.sh | sh -s -- --git your-name/repo-name`
-if you think that makes it easier.
+去安装，这也许会更简单些（相对于手动安装）。
 
 </aside>
 
-### When to use it
+### 什么时候使用它
 
-Having binary releases is a good idea in general,
-there's hardly any downside to it.
-It does not solve the problem of users having to manually
-install and update
-your tools,
-but they can quickly get the latest releases version
-without the need to install Rust.
+一般来说使用 release 的二进制文件来安装是非常好的主意，它几乎没啥缺点。
+虽然它没解决自动安装及更新的问题，
+但可以在不安装 Rust 的情况下得到并使用相应的程序。
 
-### What to package in addition to your binaries
+### 除了二进制程序外还要打包什么
 
-Right now,
-when a user downloads our release builds,
-they will get a `.tar.gz` file
-that only contains binary files.
-So, in our example project,
-they will just get a single `grrs` file they can run.
-But there are some more files we already have in our repository
-that they might want to have.
-The README file that tells them how to use this tool,
-and the license file(s),
-for example.
-Since we already have them,
-they are easy to add.
+现在，当一个用户下载了我们的 release 构建程序，他会得到一个 `.tar.gz` 文件。
+里面只包含了一些二进制文件。而在我们的示例项目中，只有一个可运行的 `grrs` 文件。
+但在我们的仓库中，也许还有一些其它文件是用户想要的，
+比如 README 中有程序的使用方法，license 文件有程序的许可信息。
+我们可以非常容易地将这些已有的文件添加到 release 的压缩包中。
 
-There are some more interesting files
-that make sense especially for command-line tools,
-though:
-How about we also ship a man page in addition to that README file,
-and config files that add completions of the possible flags to your shell?
-You can write these by hand,
-but _clap_, the argument parsing library we use
-(which structopt builds upon)
-has a way to generate all these files for us.
-See [this in-depth chapter][clap-man-pages]
-for more details.
+这里还有一些非常有意思且有用的文件，尤其是在命令行工具中：
+除了 README 文件，我们再提供一个帮助手册怎么样，然后再添加一个支持 SHELL
+自动补全功能的配置文件？你可以自己来手写这些，
+或者使用 _clap_，
+这个解析参数的库（structopt 就是基于它）提供了一个方法来帮我们生成这些文件。
+详情可查看[深入了解][clap-man-pages]这一章。
 
 
-[clap-man-pages]: ../in-depth/docs.html
+[clap-man-pages]: ../in-depth/docs_zh.html
 
 
-## Getting your app into package repositories
+## 将你的软件放到软件仓库中
 
-Both approaches we've seen so far
-are not how you typically install software on your machine.
-Especially command-line tools
-you install using global package managers
-on most operating systems.
-The advantages for users are quite obvious:
-There is no need to think about how to install your program,
-if it can be installed the same way as they install the other tools.
-These package managers also allow users to update their programs
-when a new version is available.
+到目前为止，我们看到的两种方式都不是通常情况下你在计算机上安装软件的方式。
+尤其在大多数操作系统上，会使用全局包管理器来进行命令行工具的安装。
+这种包管理器对用户来说，优势非常明显：
+他不需要去考虑如何安装你的软件，因为其安装方法和安装其它工具一样。
+这些包管理器同样允许用户在软件有新版本时去更新它们。
 
-Sadly, supporting different systems means
-you'll have to look at how these different systems work.
-For some,
-it might be as easy as adding a file to your repository
-(e.g. adding a Formula file like [this][rg-formula] for macOS's `brew`),
-but for others you'll often need to send in patches yourself
-and add your tool to their repositories.
-There are helpful tools like
-[cargo-rpm](https://crates.io/crates/cargo-rpm),
-[cargo-deb](https://crates.io/crates/cargo-deb), and
-[cargo-aur](https://crates.io/crates/cargo-aur),
-but describing how they work
-and how to correctly package your tool
-for those different systems is beyond the scope of this chapter.
+不过，要支持不同的系统意味着你必须了解它们是如何工作的。
+有一些是比较简单的
+（比如，为 macOS 的 `brew` 添加一个 Formula 像[这个][rg-formula]），
+还有的需要你自己来发送补丁并将你的工具添加他们的软件仓库中。
+这里有一些很有用的工具，像
+[cargo-rpm](https://crates.io/crates/cargo-rpm)、
+[cargo-deb](https://crates.io/crates/cargo-deb) 和
+[cargo-aur](https://crates.io/crates/cargo-aur)。
+但它们是如何工作的及你要如何正确地为不同的系统打包你的工具不在本章的讨论范围中。。
 
 [rg-formula]: https://github.com/BurntSushi/ripgrep/blob/31adff6f3c4bfefc9e77df40871f2989443e6827/pkg/brew/ripgrep-bin.rb
 
-Instead,
-let's have a look at a tool that is written in Rust
-and that is available in many different package managers.
+现在，让我们看一下一个使用 Rust 编写，且在许多不同的包管理器中都存在的一个工具。
 
-### An example: ripgrep
+### 一个示例：ripgrep
 
-[ripgrep] is an alternative to `grep`/`ack`/`ag` and is written in Rust.
-It's quite successful and is packaged for many operating systems:
-Just look at [the "Installation" section][rg-install] of its README!
+[ripgrep] 是一个用 Rust 编写的，类似于 `grep`/`ack`/`ag` 的工具。
+这是一个十分成功的项目，且打包分发支持了许多不同的操作系统：
+请查看项目中 README 的[安装][rg-install] 部分。
 
-Note that it lists a few different options how you can install it:
-It starts with a link to the GitHub releases
-which contain the binaries so you can download them directly;
-then it lists how to install it using a bunch of different package managers;
-finally, you can also install it using `cargo install`.
+注意，其中列出了几种安装它的办法：
+首先它提供了一个指向 GitHub releases 页面的链接，在这儿你可以直接下载二进制程序；
+然后，也列出了，如何使用不同的软件管理器来安装；
+最后，你也可以使用 `cargo install` 来安装它！
 
-This seems like a very good idea:
-Don't pick and choose one of the approaches presented here,
-but start with `cargo install`,
-add binary releases,
-and finally start distributing your tool using system package managers.
+不要只选择这里介绍的一种方法，而是先使用 `cargo install`，
+然后再发布二进制 releases，最后再尝试使用系统包管理器来分发你的工具。
+相信我，这会是一个好主意！
 
 [ripgrep]: https://github.com/BurntSushi/ripgrep
 [rg-install]: https://github.com/BurntSushi/ripgrep/tree/31adff6f3c4bfefc9e77df40871f2989443e6827#installation
