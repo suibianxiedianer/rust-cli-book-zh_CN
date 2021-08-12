@@ -12,7 +12,7 @@
   - [打包并发布一个 Rust 工具](./tutorial/packaging_zh.md)
 - [再深入谈谈](./in-depth/README_zh.md)
   - [信号处理](./in-depth/signals_zh.md)
-  - [Using config files](./in-depth/config-files_zh.md)
+  - [使用配置文件](./in-depth/config-files_zh.md)
   - [Exit codes](./in-depth/exit-code_zh.md)
   - [Communicating with humans](./in-depth/human-communication_zh.md)
   - [Communicating with machines](./in-depth/machine-communication_zh.md)

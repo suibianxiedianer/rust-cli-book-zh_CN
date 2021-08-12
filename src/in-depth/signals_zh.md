@@ -1,64 +1,41 @@
 # 信号处理
 
-Processes
-like command line applications
-need to react to signals sent by the operating system.
-The most common example is probably <kbd>Ctrl</kbd>+<kbd>C</kbd>,
-the signal that typically tells a process to terminate.
-To handle signals in Rust programs
-you need to consider how you can receive these signals
-as well as how you can react to them.
+像命令行程序这种进程需要接受操作系统发出的信号并做出相应的反应。
+最常见的就是 <kbd>Ctrl</kbd>+<kbd>C</kbd> 了，这是典型的终止进程的信号。
+在 Rust 程序中处理信号，你需要考虑如何获取这些信号及如何做出反应。
 
 <aside>
 
-**Note:**
-If your applications does not need to gracefully shutdown,
-the default handling is fine
-(i.e. exit immediately
-and let the OS cleanup resources like open file handles).
-In that case:
-No need to do what this chapter tells you!
+**注：**
+如果你的程序不需要优雅地关闭，那么默认的处理方式就很好（比如，立即退出，
+并让系统清理资源如打开的文件的句柄）。
+在这种情况下，就无须理会本章告诉你的操作了！
 
-However,
-for applications that need to clean up after themselves,
-this chapter is very relevant!
-For example,
-if your application needs to
-properly close network connections
-(saying "good bye" to the processes at the other end),
-remove temporary files,
-or reset system settings,
-read on.
+然后，对于一些需要做自我清理工作的程序，本章讲的东西就非常有用了!
+比如，如果你的程序需要正确地关闭网络连接（向另一端发送结束语句），
+移除临时文件或重置系统设置等，请继续往下看。
 
 </aside>
 
-## Differences between operating systems
+## 操作系统之间的差异
 
-On Unix systems
-(like Linux, macOS, and FreeBSD)
-a process can receive [signals].
-It can either react to them
-in a default (OS-provided) way,
-catch the signal and handle them in a program-defined way,
-or ignore the signal entirely.
+在 Unix 系统（比如 Linux、macOS 和 FreeBSD），进程可以接受 [signals]。
+它可以以默认的方式（系统提供）来接收信号并以默认的方式处理它，
+或者直接不理会这个信号。
 
 [signals]: https://manpages.ubuntu.com/manpages/bionic/en/man7/signal.7.html
 
-Windows does not have signals.
-You can use [Console Handlers]
-to define callbacks that get executed when an event occurs.
-There is also [structured exception handling]
-which handles all the various types of system exceptions such as division by zero, invalid access exceptions, stack overflow, and so on
+Windows 没有信号。你可以使用 [Console Handlers] 来定义某事件发生后的回调。
+还有 [structured exception handling]，它处理所有各种类型的系统异常，
+如被零除，无效访问异常，堆栈溢出等。
 
 [Console Handlers]: https://docs.microsoft.com/en-us/windows/console/console-control-handlers
 [structured exception handling]: https://docs.microsoft.com/en-us/windows/desktop/debug/structured-exception-handling
 
-## First off: Handling Ctrl+C
+## 首先：处理 Ctrl+C
 
-The [ctrlc] crate does just what the name suggests:
-It allows you to react to the user pressing <kbd>Ctrl</kbd>+<kbd>C</kbd>,
-in a cross-platform way.
-The main way to use the crate is this:
+[ctrlc] 箱如其名：它允许你在用户按下 <kbd>Ctrl</kbd>+<kbd>C</kbd> 时，
+去做出相应的反应，且它是跨平台的。其使用方法如下：
 
 [ctrlc]: https://crates.io/crates/ctrlc
 
@@ -66,31 +43,22 @@ The main way to use the crate is this:
 {{#include signals-ctrlc.rs}}
 ```
 
-This is, of course, not that helpful:
-It only prints a message but otherwise doesn't stop the program.
+当然，这没啥意义：它只是打印出了一段信息，而并没有退出程序。
 
-In a real-world program,
-it's a good idea to instead set a variable in the signal handler
-that you then check in various places in your program.
-For example,
-you can set an `Arc<AtomicBool>`
-(a boolean shareable between threads)
-in your signal handler,
-and in hot loops,
-or when waiting for a thread,
-you periodically check its value
-and break when it becomes true.
+在现实的程序中，在信号处理时去设置一个变量，
+并在程序中各个位置去检查，会是一个好主意。
+比如，你可以在信号处理程序中设置一个 `Arc<AtomicBool>`
+（一个可在线程中共享的 boolean），并在一个无限循环中，或在等待线程时，
+周期性地检查它的值，当它为真时退出程序。
 
-## Handling other types of signals
+## 处理其它类型的信号
 
-The [ctrlc] crate only handles <kbd>Ctrl</kbd>+<kbd>C</kbd>,
-or, what on Unix systems would be called `SIGINT` (the "interrupt" signal).
-To react to more Unix signals,
-you should have a look at [signal-hook].
-Its design is described in [this blog post][signal-hook-post],
-and it is currently the library with the widest community support.
+[ctrlc] 箱只会处理 <kbd>Ctrl</kbd>+<kbd>C</kbd>，或者在 Unix 系统中，称为
+`SIGINT`（中断信号）。[signal-hook] 可以去处理更多的 Unix 信号。
+在 [this blog post][signal-hook-post] 中描述了它的设计原理，
+且它是目前社区里支持最为广泛的库。
 
-Here's a simple example:
+一个简单的示例：
 
 ```rust,ignore
 {{#include signals-hooked.rs}}
@@ -98,17 +66,12 @@ Here's a simple example:
 
 [signal-hook-post]: https://vorner.github.io/2018/06/28/signal-hook.html
 
-## Using channels
+## 使用通道（channels)
 
-Instead of setting a variable
-and having other parts of the program check it,
-you can use channels:
-You create a channel into which the signal handler emits a value
-whenever the signal is received.
-In your application code you use
-this and other channels
-as synchronization points between threads.
-Using [crossbeam-channel] it would look something like this:
+除了设置一个变量并在程序其它部分去检查它，你还可以使用通道：
+创建一个通道，在信号处理器接收到信号后，向里面发送一个值。
+在你的程序代码中，使用此通道和其他通道作为线程之间的同步点。
+像这样使用 [crossbeam-channel]：
 
 [crossbeam-channel]: https://crates.io/crates/crossbeam-channel
 
@@ -116,26 +79,21 @@ Using [crossbeam-channel] it would look something like this:
 {{#include signals-channels.rs}}
 ```
 
-## Using futures and streams
+## 使用 futures 和 streams
 
-If you are using [tokio],
-you are most likely already writing your application
-with asynchronous patterns and an event-driven design.
-Instead of using crossbeam's channels directly,
-you can enable signal-hook's `tokio-support` feature.
-This allows you to call [`.into_async()`]
-on signal-hook's `Signals` types
-to get a new type that implements `futures::Stream`.
+如果你使用 [tokio]，那你应该已经写了一个使用异步编程的事件驱动型的程序。
+除了直接使用 crossbeam 的通道之外，
+你还可以启用 signal-hook 的 `tokio-support` feture。
+它允许你在 signal-hook 的 `Signals` 类上调用 [`.into_async()`]
+来获得一个实现了 `futures::Stream` 的新类型。
 
 [signal-hook]: https://crates.io/crates/signal-hook
 [tokio]: https://tokio.rs/
 [`.into_async()`]: https://docs.rs/signal-hook/0.1.6/signal_hook/iterator/struct.Signals.html#method.into_async
 
-## What to do when you receive another Ctrl+C while you're handling the first Ctrl+C
+## 当处理 Ctrl+C 时又接收到新的 Ctrl+C 时怎么办
 
-Most users will press <kbd>Ctrl</kbd>+<kbd>C</kbd>,
-and then give your program a few seconds to exit,
-or tell them what's going on.
-If that doesn't happen,
-they will press <kbd>Ctrl</kbd>+<kbd>C</kbd> again.
-The typical behavior is to have the application quit immediately.
+大部分用户会按下 <kbd>Ctrl</kbd>+<kbd>C</kbd>，
+等待你的程序退出（也许需要几秒钟）或告诉他们接下来要怎么办。
+如果没效果，他们会再次按下 <kbd>Ctrl</kbd>+<kbd>C</kbd>。
+一般情况下，此时程序会立即退出！

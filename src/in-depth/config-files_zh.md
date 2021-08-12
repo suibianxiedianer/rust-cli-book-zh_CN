@@ -1,4 +1,4 @@
-# Using config files
+# 使用配置文件
 
 Dealing with configurations can be annoying
 especially if you support multiple operating systems
