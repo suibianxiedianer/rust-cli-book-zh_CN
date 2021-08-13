@@ -35,22 +35,16 @@
 - warning
 - error
 
-It's a good idea to think of _info_ as the default log level.
-Use it for, well, informative output.
-(Some applications that lean towards a more quiet output style
-might only show warnings and errors by default.)
+将 _info_ 设置为默认的日志级别来输出信息是个好主意。
+（一些应用更倾向于更为安静的输出——默认只输出警告和错误信息）
 
-Additionally,
-it's always a good idea to use similar prefixes
-and sentence structure across log messages,
-making it easy to use a tool like `grep` to filter for them.
-A message should provide enough context by itself
-to be useful in a filtered log
-while not being *too* verbose at the same time.
+此外，保持使用相同的前缀和日志语句格式，总会是最好的选择！
+这样可以更方便地使用 `grep` 命令来筛选日志。
+在一条日志消息中，需要提供足够的信息来方便进行日志筛选，但也不要太过详尽、冗长。
 
 [log-levels]: https://docs.rs/log/0.4.4/log/enum.Level.html
 
-### Example log statements
+### 日志句法示例
 
 ```console
 error: could not find `Cargo.toml` in `/home/you/project/`
@@ -61,7 +55,7 @@ error: could not find `Cargo.toml` in `/home/you/project/`
 => Downloading packages...
 ```
 
-The following log output is taken from [wasm-pack]:
+[wasm-pack] 中的日志：
 
 ```console
  [1/7] Adding WASM target...
@@ -79,41 +73,26 @@ The following log output is taken from [wasm-pack]:
  Done in 1 second
 ```
 
-## When panicking
+## 崩溃的时候
 
-One aspect often forgotten is that
-your program also outputs something when it crashes.
-In Rust, "crashes" are most often "panics"
-(i.e., "controlled crashing"
-in contrast to "the operating system killed the process").
-By default,
-when a panic occurs,
-a "panic handler" will print some information to the console.
+一个常被忽略的点是——程序在崩溃的时候也要输出一些东西。
+在 Rust 中，崩溃通常是程序的 `panics`（“可控崩溃”不“操作系统直接杀死进程”不同）。
+默认情况下，当 panic 发生时，“panic handler” 会在终端中打印一些有用信息。
 
-For example,
-if you create a new binary project
-with `cargo new --bin foo`
-and replace the content of `fn main` with `panic!("Hello World")`,
-you get this when you run your program:
+比如，你使用 `cargo new --bin foo` 生成一个新的二进制项目，
+并在 `fn main` 中添加一句 `panic!("Hello World")`，当你运行程序时：
 
 ```console
 thread 'main' panicked at 'Hello, world!', src/main.rs:2:5
 note: Run with `RUST_BACKTRACE=1` for a backtrace.
 ```
 
-This is useful information to you, the developer.
-(Surprise: the program crashed because of line 2 in your `main.rs` file).
-But for a user who doesn't even have access to the source code,
-this is not very valuable.
-In fact, it most likely is just confusing.
-That's why it's a good idea to add a custom panic handler,
-that provides a bit more end-user focused output.
+这对于你，开发者来说，是有用的信息。（哈哈：你的程序在 `main.rs` 第二行崩溃了）
+但对于那些没源码的人，它没什么价值，而且事实上，它只会让人感到更为困惑。
+所以，添加一个更为面向终端用户的自定义 panic 处理器是一个好主意！
 
-One library that does just that is called [human-panic].
-To add it to your CLI project,
-you import it
-and call the `setup_panic!()` macro
-at the beginning of your `main` function:
+[human-panic] 就是一个做这样的库。把它添加到你的 CLI 项目中，导入，
+并在你的 `main` 函数的开头调用 `setup_panic!()` 宏：
 
 ```rust,ignore
 use human_panic::setup_panic;
@@ -125,8 +104,7 @@ fn main() {
 }
 ```
 
-This will now show a very friendly message,
-and tells the user what they can do:
+现在它将显示更为友好的信息，并告诉用户他们能做什么：
 
 ```console
 Well, this is embarrassing.

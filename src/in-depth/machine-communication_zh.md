@@ -1,24 +1,19 @@
-# Communicating with machines
+# 与机器交互
 
-The power of command-line tools really comes to shine
-when you are able to combine them.
-This is not a new idea:
-In fact, this is a sentence from the [Unix philosophy]:
+当你能够将命令行工具组合到一起时，它们的威力就会大放异彩！
+这并不是一个新的点子，事实上，它来源的 [Unix 哲学]：
 
-> Expect the output of every program to become the input to another, as yet unknown, program.
+> 程序应该只关注一个目标，并尽可能把它做好。让程序能够互相协同工作。应该让程序处理文本数据流，因为这是一个通用的接口。
 
-[Unix philosophy]: https://en.wikipedia.org/wiki/Unix_philosophy
+[Unix 哲学]: https://zh.wikipedia.org/wiki/Unix哲学
 
-If our programs fulfill this expectation,
-our users will be happy.
-To make sure this works well,
-we should provide not just pretty output for humans,
-but also a version tailored to what other programs need.
-Let's see how we can do this.
+如果我们的程序能做到这些，那么我们的用户将会非常高兴的。
+为了能做到这点，我们要保证我们的输出信息不止适用于人类阅读，
+也要是对其它程序来说是可用的。现在让我们看看，如何做到这点。
 
 <aside>
 
-**Aside:**
+**注：**
 Make sure to read [the chapter on CLI output][output]
 in the tutorial first.
 It covers how to write output to the terminal.
