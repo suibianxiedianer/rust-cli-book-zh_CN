@@ -1,54 +1,33 @@
-# Communicating with humans
+# 与人交互
 
-Make sure to read [the chapter on CLI output][output]
-in the tutorial first.
-It covers how to write output to the terminal,
-while this chapter will talk about _what_ to output.
+你需要先去阅读[输出][output]这一章节。
+它介绍了如何在终端中写入输入，而本节将谈谈写入哪些输出。
 
-[output]: ../tutorial/output.html
+[output]: ../tutorial/output_zh.html
 
-## When everything is fine
+## 当一切都正常时
 
-It is useful to report on the application's progress
-even when everything is fine.
-Try to be informative and concise in these messages.
-Don't use overly technical terms in the logs.
-Remember:
-the application is not crashing
-so there's no reason for users to look up errors.
+即使一切正常，报告程序的进度也很有用。但要尽量提供简洁有用的信息。
+不要在日志中使用过于专业的术语。
+请记住，此时程序没有崩溃，所以用户没必要去查找错误。
 
-Most importantly,
-be consistent in the style of communication.
-Use the same prefixes and sentence structure
-to make the logs easily skimmable.
+最重要的是，要保证简洁，使用相同的前缀和语句结构以便日志更易于阅读。
 
-Try to let your application output tell a story
-about what it's doing
-and how it impacts the user.
-This can involve showing a timeline of steps involved
-or even a progress bar and indicator for long-running actions.
-The user should at no point
-get the feeling that the application is doing something mysterious
-that they cannot follow.
+要试着让你的程序的输出讲清楚它在做什么，及对用户有什么影响。
+这可能涉及显示其步骤的时间线，甚至在长时间运行的程序中显示一个进度条和指示器。
+用户在任何时候都不应该有程序在做一些他们无法理解的神秘的事情的感觉。
 
-## When it's hard to tell what's going on
+## 当很难说清楚发生了什么时
 
-When communicating non-nominal state it's important to be consistent.
-A heavily logging application that doesn't follow strict logging levels
-provides the same amount, or even less information
-than a non-logging application.
+在传达非名义状态时，保持一致很重要。
+与无日志应用相比，不严格遵循日志记录级别且生成大量日志的程序，
+其提供的信息量会相同，甚至于更少。
 
-Because of this,
-it's important to define the severity of events
-and messages that are related to it;
-then use consistent log levels for them.
-This way users can select the amount of logging themselves
-via `--verbose` flags
-or environment variables (like `RUST_LOG`).
+所以，定义与之相关的事件和消息的严重性很重要；然后为它们使用一致的日志级别。
+使用这种方法使得用户可以使用 `--verbose`
+或设置环境变量（如 `RUST_LOG`）来得到大量的 log 信息。
 
-The commonly used `log` crate
-[defines][log-levels] the following levels
-(ordered by increasing severity):
+通常会使用到 `log` 箱来 [defines][log-levels] 这些 log 等级（按严重级别排列）：
 
 - trace
 - debug
