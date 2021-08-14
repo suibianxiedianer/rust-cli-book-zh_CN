@@ -1,7 +1,7 @@
-# Useful crates
-There is always new crates being released that can be useful in the development of command line applications.
+# 好用的 crates
+总会有新的可适用于开发命令行工具程序的 crates 被发布出来。
 
-## Crates referenced in this book
+## 本书引用到的 crates
 - [anyhow](https://crates.io/crates/anyhow) - provides `anyhow::Error` for easy error handling
 - [assert_cmd](https://crates.io/crates/assert_cmd) - simplifies integration testing of CLIs
 - [assert_fs](https://crates.io/crates/assert_fs) - Setup input files and test output files
@@ -24,9 +24,9 @@ There is always new crates being released that can be useful in the development 
 - [tokio](https://crates.io/crates/tokio) - asynchronous runtime
 - [wasm-pack](https://crates.io/crates/wasm-pack) - tool for building WebAssembly
 
-## Other crates
-Due to the constantly-changing landscape of Rust crates, a good place to find crates is the [lib.rs](https://lib.rs) crate index.
-Here are a few specific categories that might be useful for building CLI's:
+## 其它 crates
+Rust 的 crates 景观是不断变化的，你可以在 [lib.rs](https://lib.rs) 查找 crates：
+以下是一些可能对构建 CLIs 有用的特定的类别：
 - [Command-line interface](https://lib.rs/command-line-interface)
 - [Configuration](https://lib.rs/config)
 - [Database interfaces](https://lib.rs/database)

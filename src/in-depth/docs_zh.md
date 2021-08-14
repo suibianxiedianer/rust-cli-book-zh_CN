@@ -1,12 +1,8 @@
-# Rendering documentation for your CLI apps
+# 为你的 CLI 程序生成文档
 
-Documentation for CLIs usually consists of
-a `--help` section in the command
-and a manual (`man`) page.
+CLI 程序的文档通常包括调用命令时使用 `--help` 及 `man` 手册。
 
-Both can be automatically generated
-when using `clap` v3 (in unreleased beta,
-at time of writing), via the `man` backend.
+当你使用 `clap` v3（目前还是 unreleased 状态），会通过 `man` 后端自动生成这些。
 
 ```rust,ignore
 #[derive(Clap)]
@@ -20,16 +16,10 @@ pub struct Head {
 }
 ```
 
-Secondly, you need to use a `build.rs`
-to generate the manual file at compile time
-from the definition of your app
-in code.
+其次，你需要使用 `build.rs` 来在编译时从你的代码中生成手册。
 
-There are a few things to keep in mind
-(such as how you want to package your binary)
-but for now
-we simply put the `man` file
-next to our `src` folder.
+在这里你要留意几件事（比如如何打包你的程序），
+但现在我们只是简单地把 `man` 文件放到我们的 `src` 同级目录。
 
 ```rust,ignore
 use clap::IntoApp;
@@ -49,9 +39,6 @@ fn main() {
 }
 ```
 
-When you now compile your application
-there will be a `head.1` file
-in your project directory.
+现在你编译你的程序时，将在你的项目目录生成一个 `head.1` 文件。
 
-If you open that in `man`
-you'll be able to admire your free documentation.
+如果你使用 `man` 打开它，就可以看到你的文档了。
