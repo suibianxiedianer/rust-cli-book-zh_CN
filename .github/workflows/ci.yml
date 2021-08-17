@@ -1,34 +1,25 @@
 name: ci
+
 on:
-  pull_request:
-    paths:
-    - '**'
-    - '!*.md'
-    - "!/LICENSE"
   push:
-    branches:
-    - master
-    paths:
-    - '**'
-    - '!*.md'
-    - "!/LICENSE"
+    branches: [ zh_CN ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
-  test:
-    name: Test
-    strategy:
-      matrix:
-        os: ["ubuntu-latest"]
-        rust: ["stable"]
-    runs-on: ${{ matrix.os }}
+  build:
+
+    runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: ${{ matrix.rust }}
-        profile: minimal
-        override: true
-    - uses: Swatinem/rust-cache@v1
-    - name: Default features
-      run: cargo test --workspace
+    - uses: actions/checkout@v2
+    - name: Install MDBook
+      run: cargo install mdbook
+    - name: Choose summary
+      run: cp src/SUMMARY_zh.md src/SUMMARY.md
+    - name: Build
+      run: mdbook build
+
