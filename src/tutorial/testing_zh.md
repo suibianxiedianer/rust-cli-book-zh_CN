@@ -287,7 +287,6 @@ Rust 处理项目的方式非常灵活，尽早地考虑清楚哪些功能要放
 我们不会将这些依赖放到程序的主依赖中，
 而是放到 `Cargo.toml` 的 `dev dependencies` 部分。
 它们只会在开发时被使用到，而使用时则不会。
-not when using it.
 
 ```toml
 {{#include testing/Cargo.toml:11:13}}
