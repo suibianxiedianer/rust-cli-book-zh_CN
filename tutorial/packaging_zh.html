@@ -1,0 +1,354 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>打包并发布一个 Rust 工具 - Command Line Applications in Rust</title>
+                
+
+        <!-- Custom HTML head -->
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+                <link rel="icon" href="../favicon.svg">
+                        <link rel="shortcut icon" href="../favicon.png">
+                <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+                <link rel="stylesheet" href="../css/print.css" media="print">
+        
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="../fonts/fonts.css">
+        
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+                <link rel="stylesheet" href="../src/special-content.css">
+        
+            </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../README_zh.html">让我们开始吧！</a></li><li class="chapter-item expanded "><a href="../tutorial/README_zh.html"><strong aria-hidden="true">1.</strong> 15 分钟编写一个命令行工具</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tutorial/setup_zh.html"><strong aria-hidden="true">1.1.</strong> 初始化项目</a></li><li class="chapter-item expanded "><a href="../tutorial/cli-args_zh.html"><strong aria-hidden="true">1.2.</strong> 解析命令行参数</a></li><li class="chapter-item expanded "><a href="../tutorial/impl-draft_zh.html"><strong aria-hidden="true">1.3.</strong> 第一个实现</a></li><li class="chapter-item expanded "><a href="../tutorial/errors_zh.html"><strong aria-hidden="true">1.4.</strong> 更好地反馈错误</a></li><li class="chapter-item expanded "><a href="../tutorial/output_zh.html"><strong aria-hidden="true">1.5.</strong> 输出</a></li><li class="chapter-item expanded "><a href="../tutorial/testing_zh.html"><strong aria-hidden="true">1.6.</strong> 测试</a></li><li class="chapter-item expanded "><a href="../tutorial/packaging_zh.html" class="active"><strong aria-hidden="true">1.7.</strong> 打包并发布一个 Rust 工具</a></li></ol></li><li class="chapter-item expanded "><a href="../in-depth/README_zh.html"><strong aria-hidden="true">2.</strong> 再深入谈谈</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../in-depth/signals_zh.html"><strong aria-hidden="true">2.1.</strong> 信号处理</a></li><li class="chapter-item expanded "><a href="../in-depth/config-files_zh.html"><strong aria-hidden="true">2.2.</strong> 使用配置文件</a></li><li class="chapter-item expanded "><a href="../in-depth/exit-code_zh.html"><strong aria-hidden="true">2.3.</strong> 退出状态码</a></li><li class="chapter-item expanded "><a href="../in-depth/human-communication_zh.html"><strong aria-hidden="true">2.4.</strong> 与人交互</a></li><li class="chapter-item expanded "><a href="../in-depth/machine-communication_zh.html"><strong aria-hidden="true">2.5.</strong> 与机器交互</a></li><li class="chapter-item expanded "><a href="../in-depth/docs_zh.html"><strong aria-hidden="true">2.6.</strong> 为你的 CLI 程序生成文档</a></li></ol></li><li class="chapter-item expanded "><a href="../crates/README_zh.html"><strong aria-hidden="true">3.</strong> 好用的 crates</a></li></ol>            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                                            </div>
+
+                    <h1 class="menu-title">Command Line Applications in Rust</h1>
+
+                    <div class="right-buttons">
+                                                <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                                                                        <a href="https://github.com/rust-cli/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                                                
+                    </div>
+                </div>
+
+                                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="打包并发布一个-rust-工具"><a class="header" href="#打包并发布一个-rust-工具">打包并发布一个 Rust 工具</a></h1>
+<p>如果你确信你的程序已经准备好提供给其它人使用了，那么是时候打包并发布它了！</p>
+<p>我们可以有许多种办法，现在我们从“最快设置”到“对用户最方便”看其中的三种。</p>
+<h2 id="最快的方法cargo-publish"><a class="header" href="#最快的方法cargo-publish">最快的方法：<code>cargo publish</code></a></h2>
+<p>发布你的程序最简单的办法就是使用 cargo。
+你还记得我们怎么往我们的项目中添加依赖么？
+cargo 从默认的 “crate 仓库”<a href="https://crates.io/">crates.io</a> 下载它们。
+使用 <code>cargo publish</code>，你可以在 <a href="https://crates.io/">crates.io</a> 上发布你的 crate。
+这适用于包括二进制程序在内的所有 crates。</p>
+<p>如果你已经在 <a href="https://crates.io/">crates.io</a> 上创建了一个账号，
+那么在上面发布一个 crate 是非常简单的。
+目前，它是通过 GitHub 来认证的，所以你需要一个 GitHub 账号,
+并在 <a href="https://crates.io/">crates.io</a> 上登录。然后，你需要在你本地的机器上登录（终端登录）。
+然后，<a href="https://crates.io/">crates.io</a> 的账号设置页面，生成一个新的 token，
+在你的本地终端运行 <code>cargo login &lt;your-new-token&gt;</code>。
+每台机器上只需运行一次即可一直使用。
+有兴趣可以去看 cargo 的 <a href="https://doc.rust-lang.org/1.39.0/cargo/reference/publishing.html">publishing guide</a> </p>
+<p>现在你已经了解了 cargo 和 crates.io，可以去发布你的 crate 了。
+在你急急忙忙地想着发布一个新的（或更新版本）crate 前，
+你最好打开 <code>Cargo.toml</code> 并检查是否提供了必要的元数据。
+你可以在 <a href="https://doc.rust-lang.org/1.39.0/cargo/reference/manifest.html">cargo’s manifest format</a> 的文档中找到所有需要设置的字段，
+下面展示了其中的常见条件：</p>
+<pre><code class="language-toml">[package]
+name = &quot;grrs&quot;
+version = &quot;0.1.0&quot;
+authors = [&quot;Your Name &lt;your@email.com&gt;&quot;]
+license = &quot;MIT OR Apache-2.0&quot;
+description = &quot;A tool to search files&quot;
+readme = &quot;README.md&quot;
+homepage = &quot;https://github.com/you/grrs&quot;
+repository = &quot;https://github.com/you/grrs&quot;
+keywords = [&quot;cli&quot;, &quot;search&quot;, &quot;demo&quot;]
+categories = [&quot;command-line-utilities&quot;]
+</code></pre>
+<aside class="note">
+<p><strong>注：</strong>
+这个示例包括了必须的 license 字段，它选择了 Rust 项目中常见的许可证，
+编译器本身也是使用的这个 license。
+它还引用了 <code>README.md</code> 文件。
+它应该包括一个对你的项目的简单描述信息，这个信息不仅会显示在 crates.io
+上你的 crate 页面中，还在会 GitHub 仓库页面显示。</p>
+</aside>
+<h3 id="如何从-cratesio-上安装程序"><a class="header" href="#如何从-cratesio-上安装程序">如何从 crates.io 上安装程序</a></h3>
+<p>我们刚刚学习了如何在 crates.io 上发布一个 crate，那么又如何去安装它呢？</p>
+<p>我们同样可以使用 cargo 命令，运行 <code>cargo install &lt;crate-name&gt;</code>。
+它默认会下载这个 crate，编译其中所有的二进制程序（使用 release 模式，
+所以可能会稍慢）并将程序拷贝到 <code>~/.cargo/bin</code> 目录。
+（需确保你的 PATH 中有这个路径，才可正常使用安装的命令）</p>
+<p>我们还可以直接在源码仓库下安装程序，使用这种文件可以指定安装哪些二进制程序，
+及程序安装到什么位置。详情可查看 <code>cargo install --help</code>。</p>
+<h3 id="什么时候使用它"><a class="header" href="#什么时候使用它">什么时候使用它</a></h3>
+<p>使用 <code>cargo install</code> 可以很方便的安装一个 crate 程序。
+但你需要了解到它的几个不足之处：
+因为它总是会从头开始编译你的源码，所以使用你的工具的用户，
+在他们的机器上需要安装上 Rust，Cargo 及其它所需的依赖。
+而且编译一个大型的 Rust 代码库也需要较长的时间。</p>
+<p>最好使用它来分发面向其它 Rust 开发者的工具。
+比如，许多 cargo 的子命令，
+像 <code>cargo-tree</code> 或 <code>cargo-outdated</code> 可以使用这种方法来安装。</p>
+<h2 id="发布二进制程序"><a class="header" href="#发布二进制程序">发布二进制程序</a></h2>
+<p>Rust 会默认编译出使用静态链接的机器代码。
+当你运行 <code>cargo build</code>时，若你的项目中有包含一个叫 <code>grrs</code> 的二进制 target，
+你将得到一个叫 <code>grrs</code> 的二进制文件。
+来试试吧：使用 <code>cargo build</code>，二进制文件在 <code>target/debug/grrs</code>，
+若使用 <code>cargo build --release</code> 则生成的文件在 <code>target/release/grrs</code>。
+除非你使用的 crates 中明确地说明了需要在目标系统上安装外部依赖库
+（如需要使用系统提供的 OpenSSL），否则这个二进制文件只会依赖于通用系统库。
+这意味着，将此二进制程序拷贝到任何相同的操作系统上，它都能完美地运行！</p>
+<p>这已经很强大了！它解决了我们刚刚提到的，关于 <code>cargo isntall</code> 的两个不足：
+它不需要用户的机器上安装 Rust，也不需要再去编译而可直接运行。</p>
+<p>所以，<code>cargo build</code> _已经_为我们编译出了二进制程序。现在唯一的问题是，
+还不能保证其可在所有的平台上都可用。如果你在 Windows 上运行 <code>cargo build</code>，
+你并不会得到一个可在 Mac 上运行程序。
+那么有没有办法为所有的常见平台自动生成这些二进制程序呢？</p>
+<h3 id="使用-ci-构建二进制版本"><a class="header" href="#使用-ci-构建二进制版本">使用 CI 构建二进制版本</a></h3>
+<p>如果你的工具已经开源且托管在 GitHub 上，可以非常容易地设置一个免费的 CI
+（持续集成）—— <a href="https://travis-ci.com/">Travis CI</a>。（或其它平台上使用其它的服务，Travis 是最受欢迎的）
+在你每次 push 新代码到你的仓库时，它会在一个虚拟机上运行设置命令。
+至于是执行什么命令，或使用哪种虚拟机，这都是可以配置的。
+比如，在一个安装了 Rust 和常用构建工具的机器上，执行 <code>cargo test</code> 是一个好主意。
+如果这个命令失败了，你就知道最近的提交的代码是有问题的。</p>
+<p>我们还可以使用它还构建二进制程序并上传到 GitHub 上！
+那么，如果我们使用 <code>cargo build --release</code> 生成并将程序上传到某个地方，
+就一切 OK 了么？也不尽然，我们需要确保我们的程序适用于尽可能多的系统。
+比如，在 Linux 上我们可以不为当前系统编译，而是针对 <code>x86_64-unknown-linux-musl</code>
+编译，从而使程序不依赖于默认的系统库。
+在 macOS 上，我们可以设置 <code>MACOSX_DEPLOYMENT_TARGET</code> 为 <code>10.7</code>，
+使得程序只会依赖于 10.7 及其之后版本上存在的系统功能。</p>
+<p>你可以在<a href="https://github.com/rustwasm/wasm-pack/blob/51e6351c28fbd40745719e6d4a7bf26dadd30c85/.travis.yml#L74-L91">这儿</a>看到使用此方法在 Linux 和 macOS 上编译的例子，
+若使用 Windows，请看<a href="https://github.com/rustwasm/wasm-pack/blob/51e6351c28fbd40745719e6d4a7bf26dadd30c85/.appveyor.yml">这个</a>（使用 AppVeyor）。</p>
+<p>另一种方法是使用包含我们编译程序所需要到的所有工具的 pre-built (Docker) 镜像。
+这也使我们能够轻松地编译适配于更多不同的平台。
+在<a href="https://github.com/japaric/trust">trust</a> 项目中包含可以在你的项目中使用的脚本及其如何设置使用的说明。
+它还支持使用 AppVeyor 的 Windows 系统。</p>
+<p>如果你更愿意在本地设置，并在本机上生成要发布的文件，你也可以看看 trust。
+它在里面使用了 <a href="https://github.com/rust-embedded/cross">cross</a>，cross 的工作原理类似于 cargo，
+它会将命令转发到 Docker 容器中的 cargo 进程。
+此镜像的定义相关可在其仓库查看 <a href="https://github.com/rust-embedded/cross">cross’ repository</a>。</p>
+<h3 id="如何安装这些二进制程序"><a class="header" href="#如何安装这些二进制程序">如何安装这些二进制程序</a></h3>
+<p>你的发布页面也许是像<a href="https://github.com/rustwasm/wasm-pack/releases/tag/v0.5.1">这样</a>的，
+用户可以在这个页面下载我们刚生成的文件。
+我们刚刚生成的发布文件没什么特别的：它们只是一个包括我们的二进制程序的压缩包！
+这意味着你的工具的用户可以从浏览器上下载、解压，并将程序拷贝到任何地方。</p>
+<p>这需要用户有手动安装程序的经验，所以你最好在你的 README 文件中加上安装方法说明。</p>
+<aside class="note">
+<p><strong>注：</strong>
+如果你使用 <a href="https://github.com/japaric/trust">trust</a> 构建你的程序并在 GitHub releases 上发布，
+你还可以告诉你的用户来运行
+<code>curl -LSfs https://japaric.github.io/trust/install.sh | sh -s -- --git your-name/repo-name</code>
+去安装，这也许会更简单些（相对于手动安装）。</p>
+</aside>
+<h3 id="什么时候使用它-1"><a class="header" href="#什么时候使用它-1">什么时候使用它</a></h3>
+<p>一般来说使用 release 的二进制文件来安装是非常好的主意，它几乎没啥缺点。
+虽然它没解决自动安装及更新的问题，
+但可以在不安装 Rust 的情况下得到并使用相应的程序。</p>
+<h3 id="除了二进制程序外还要打包什么"><a class="header" href="#除了二进制程序外还要打包什么">除了二进制程序外还要打包什么</a></h3>
+<p>现在，当一个用户下载了我们的 release 构建程序，他会得到一个 <code>.tar.gz</code> 文件。
+里面只包含了一些二进制文件。而在我们的示例项目中，只有一个可运行的 <code>grrs</code> 文件。
+但在我们的仓库中，也许还有一些其它文件是用户想要的，
+比如 README 中有程序的使用方法，license 文件有程序的许可信息。
+我们可以非常容易地将这些已有的文件添加到 release 的压缩包中。</p>
+<p>这里还有一些非常有意思且有用的文件，尤其是在命令行工具中：
+除了 README 文件，我们再提供一个帮助手册怎么样，然后再添加一个支持 SHELL
+自动补全功能的配置文件？你可以自己来手写这些，
+或者使用 <em>clap</em>，
+这个解析参数的库（structopt 就是基于它）提供了一个方法来帮我们生成这些文件。
+详情可查看<a href="../in-depth/docs_zh.html">深入了解</a>这一章。</p>
+<h2 id="将你的软件放到软件仓库中"><a class="header" href="#将你的软件放到软件仓库中">将你的软件放到软件仓库中</a></h2>
+<p>到目前为止，我们看到的两种方式都不是通常情况下你在计算机上安装软件的方式。
+尤其在大多数操作系统上，会使用全局包管理器来进行命令行工具的安装。
+这种包管理器对用户来说，优势非常明显：
+他不需要去考虑如何安装你的软件，因为其安装方法和安装其它工具一样。
+这些包管理器同样允许用户在软件有新版本时去更新它们。</p>
+<p>不过，要支持不同的系统意味着你必须了解它们是如何工作的。
+有一些是比较简单的
+（比如，为 macOS 的 <code>brew</code> 添加一个 Formula 像<a href="https://github.com/BurntSushi/ripgrep/blob/31adff6f3c4bfefc9e77df40871f2989443e6827/pkg/brew/ripgrep-bin.rb">这个</a>），
+还有的需要你自己来发送补丁并将你的工具添加他们的软件仓库中。
+这里有一些很有用的工具，像
+<a href="https://crates.io/crates/cargo-rpm">cargo-rpm</a>、
+<a href="https://crates.io/crates/cargo-deb">cargo-deb</a> 和
+<a href="https://crates.io/crates/cargo-aur">cargo-aur</a>。
+但它们是如何工作的及你要如何正确地为不同的系统打包你的工具不在本章的讨论范围中。。</p>
+<p>现在，让我们看一下一个使用 Rust 编写，且在许多不同的包管理器中都存在的一个工具。</p>
+<h3 id="一个示例ripgrep"><a class="header" href="#一个示例ripgrep">一个示例：ripgrep</a></h3>
+<p><a href="https://github.com/BurntSushi/ripgrep">ripgrep</a> 是一个用 Rust 编写的，类似于 <code>grep</code>/<code>ack</code>/<code>ag</code> 的工具。
+这是一个十分成功的项目，且打包分发支持了许多不同的操作系统：
+请查看项目中 README 的<a href="https://github.com/BurntSushi/ripgrep/tree/31adff6f3c4bfefc9e77df40871f2989443e6827#installation">安装</a> 部分。</p>
+<p>注意，其中列出了几种安装它的办法：
+首先它提供了一个指向 GitHub releases 页面的链接，在这儿你可以直接下载二进制程序；
+然后，也列出了，如何使用不同的软件管理器来安装；
+最后，你也可以使用 <code>cargo install</code> 来安装它！</p>
+<p>不要只选择这里介绍的一种方法，而是先使用 <code>cargo install</code>，
+然后再发布二进制 releases，最后再尝试使用系统包管理器来分发你的工具。
+相信我，这会是一个好主意！</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                                                    <a rel="prev" href="../tutorial/testing_zh.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+                                                    <a rel="next" href="../in-depth/README_zh.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                                    <a rel="prev" href="../tutorial/testing_zh.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+                                    <a rel="next" href="../in-depth/README_zh.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                            </nav>
+
+        </div>
+
+        
+        
+        
+                <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+        
+                <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+        
+    </body>
+</html>

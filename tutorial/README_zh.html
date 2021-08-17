@@ -3,51 +3,37 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Project setup - Command Line Applications in Rust</title>
-        
-        
-
+        <title>15 分钟编写一个命令行工具 - Command Line Applications in Rust</title>
+                
 
         <!-- Custom HTML head -->
         
-
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        
-        <link rel="icon" href="../favicon.svg">
-        
-        
-        <link rel="shortcut icon" href="../favicon.png">
-        
-        <link rel="stylesheet" href="../css/variables.css">
+                <link rel="icon" href="../favicon.svg">
+                        <link rel="shortcut icon" href="../favicon.png">
+                <link rel="stylesheet" href="../css/variables.css">
         <link rel="stylesheet" href="../css/general.css">
         <link rel="stylesheet" href="../css/chrome.css">
+                <link rel="stylesheet" href="../css/print.css" media="print">
         
-        <link rel="stylesheet" href="../css/print.css" media="print">
-        
-
         <!-- Fonts -->
         <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="../fonts/fonts.css">
         
-        <link rel="stylesheet" href="../fonts/fonts.css">
-        
-
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../highlight.css">
         <link rel="stylesheet" href="../tomorrow-night.css">
         <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+                <link rel="stylesheet" href="../src/special-content.css">
         
-        <link rel="stylesheet" href="../src/special-content.css">
-        
-
-        
-    </head>
+            </head>
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
@@ -97,8 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">Getting started</a></li><li class="chapter-item expanded "><a href="../tutorial/index.html"><strong aria-hidden="true">1.</strong> A command line app in 15 minutes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tutorial/setup.html" class="active"><strong aria-hidden="true">1.1.</strong> Project setup</a></li><li class="chapter-item expanded "><a href="../tutorial/cli-args.html"><strong aria-hidden="true">1.2.</strong> Parsing command line arguments</a></li><li class="chapter-item expanded "><a href="../tutorial/impl-draft.html"><strong aria-hidden="true">1.3.</strong> First implementation</a></li><li class="chapter-item expanded "><a href="../tutorial/errors.html"><strong aria-hidden="true">1.4.</strong> Nicer error reporting</a></li><li class="chapter-item expanded "><a href="../tutorial/output.html"><strong aria-hidden="true">1.5.</strong> Output for humans and machines</a></li><li class="chapter-item expanded "><a href="../tutorial/testing.html"><strong aria-hidden="true">1.6.</strong> Testing</a></li><li class="chapter-item expanded "><a href="../tutorial/packaging.html"><strong aria-hidden="true">1.7.</strong> Packaging and distributing a Rust tool</a></li></ol></li><li class="chapter-item expanded "><a href="../in-depth/index.html"><strong aria-hidden="true">2.</strong> In-depth topics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../in-depth/signals.html"><strong aria-hidden="true">2.1.</strong> Signal handling</a></li><li class="chapter-item expanded "><a href="../in-depth/config-files.html"><strong aria-hidden="true">2.2.</strong> Using config files</a></li><li class="chapter-item expanded "><a href="../in-depth/exit-code.html"><strong aria-hidden="true">2.3.</strong> Exit codes</a></li><li class="chapter-item expanded "><a href="../in-depth/human-communication.html"><strong aria-hidden="true">2.4.</strong> Communicating with humans</a></li><li class="chapter-item expanded "><a href="../in-depth/machine-communication.html"><strong aria-hidden="true">2.5.</strong> Communicating with machines</a></li><li class="chapter-item expanded "><a href="../in-depth/docs.html"><strong aria-hidden="true">2.6.</strong> Rendering documentation for your CLI apps</a></li></ol></li><li class="chapter-item expanded "><a href="../crates/index.html"><strong aria-hidden="true">3.</strong> Useful crates</a></li></ol>
-            </div>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../README_zh.html">让我们开始吧！</a></li><li class="chapter-item expanded "><a href="../tutorial/README_zh.html" class="active"><strong aria-hidden="true">1.</strong> 15 分钟编写一个命令行工具</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tutorial/setup_zh.html"><strong aria-hidden="true">1.1.</strong> 初始化项目</a></li><li class="chapter-item expanded "><a href="../tutorial/cli-args_zh.html"><strong aria-hidden="true">1.2.</strong> 解析命令行参数</a></li><li class="chapter-item expanded "><a href="../tutorial/impl-draft_zh.html"><strong aria-hidden="true">1.3.</strong> 第一个实现</a></li><li class="chapter-item expanded "><a href="../tutorial/errors_zh.html"><strong aria-hidden="true">1.4.</strong> 更好地反馈错误</a></li><li class="chapter-item expanded "><a href="../tutorial/output_zh.html"><strong aria-hidden="true">1.5.</strong> 输出</a></li><li class="chapter-item expanded "><a href="../tutorial/testing_zh.html"><strong aria-hidden="true">1.6.</strong> 测试</a></li><li class="chapter-item expanded "><a href="../tutorial/packaging_zh.html"><strong aria-hidden="true">1.7.</strong> 打包并发布一个 Rust 工具</a></li></ol></li><li class="chapter-item expanded "><a href="../in-depth/README_zh.html"><strong aria-hidden="true">2.</strong> 再深入谈谈</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../in-depth/signals_zh.html"><strong aria-hidden="true">2.1.</strong> 信号处理</a></li><li class="chapter-item expanded "><a href="../in-depth/config-files_zh.html"><strong aria-hidden="true">2.2.</strong> 使用配置文件</a></li><li class="chapter-item expanded "><a href="../in-depth/exit-code_zh.html"><strong aria-hidden="true">2.3.</strong> 退出状态码</a></li><li class="chapter-item expanded "><a href="../in-depth/human-communication_zh.html"><strong aria-hidden="true">2.4.</strong> 与人交互</a></li><li class="chapter-item expanded "><a href="../in-depth/machine-communication_zh.html"><strong aria-hidden="true">2.5.</strong> 与机器交互</a></li><li class="chapter-item expanded "><a href="../in-depth/docs_zh.html"><strong aria-hidden="true">2.6.</strong> 为你的 CLI 程序生成文档</a></li></ol></li><li class="chapter-item expanded "><a href="../crates/README_zh.html"><strong aria-hidden="true">3.</strong> 好用的 crates</a></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -122,33 +107,27 @@
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        
-                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
-                        
-                    </div>
+                                            </div>
 
                     <h1 class="menu-title">Command Line Applications in Rust</h1>
 
                     <div class="right-buttons">
-                        
-                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                                <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        
-                        
-                        <a href="https://github.com/rust-cli/book" title="Git repository" aria-label="Git repository">
+                                                                        <a href="https://github.com/rust-cli/book" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        
+                                                
                     </div>
                 </div>
 
-                
-                <div id="search-wrapper" class="hidden">
+                                <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -157,7 +136,6 @@
                     </div>
                 </div>
                 
-
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script type="text/javascript">
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
@@ -169,100 +147,93 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#project-setup" id="project-setup">Project setup</a></h1>
-<p>If you haven’t already,
-<a href="https://www.rust-lang.org/tools/install">install Rust</a> on your computer
-(it should only take a few minutes).
-After that, open a terminal and navigate to the directory
-you want to put your application code into.</p>
-<p>Start by running
-<code>cargo new grrs</code>
-in the directory you store your programming projects in.
-If you look at the newly created <code>grrs</code> directory,
-you’ll find a typical setup for a Rust project:</p>
-<ul>
-<li>A <code>Cargo.toml</code> file that contains metadata for our project,
-incl. a list of dependencies/external libraries we use.</li>
-<li>A <code>src/main.rs</code> file that is the entry point for our (main) binary.</li>
-</ul>
-<p>If you can execute <code>cargo run</code> in the <code>grrs</code> directory
-and get a “Hello World”, you’re all set up.</p>
-<h2><a class="header" href="#what-it-might-look-like" id="what-it-might-look-like">What it might look like</a></h2>
-<pre><code class="language-console">$ cargo new grrs
-     Created binary (application) `grrs` package
-$ cd grrs/
-$ cargo run
-   Compiling grrs v0.1.0 (/Users/pascal/code/grrs)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.70s
-     Running `target/debug/grrs`
-Hello, world!
+                        <h1 id="15-分钟编写一个命令行应用来学习-rust"><a class="header" href="#15-分钟编写一个命令行应用来学习-rust">15 分钟编写一个命令行应用来学习 Rust</a></h1>
+<p>本教程将引导你使用 <a href="https://rust-lang.org/">Rust</a> 编写 CLI（命令行界面）应用。
+只需 15 分钟即可让你得到一个可正常运行的程序（大概 1.3 章之前）。
+之后我们将继续调整程序，直到它可以被当作一个工具来发布。</p>
+<p>你将学到如何开始所需的所有基本知识，及如何去寻找更多有用信息。
+当然，你可随意跳过当前你不需要了解的章节，或之后再翻回查看。</p>
+<aside>
+<p><strong>先决条件：</strong>
+本教程并不能替代编程的一般性介绍，你最好了解、熟悉一些常见的概念。
+同样，你应该可以熟练的使用命令行或终端。如果你会使用其它的语言，
+那么这对于你接触，学习 Rust 会很有帮助。 </p>
+<p><strong>获取帮助：</strong>
+如果你在任何时候对所使用的功能感到不解或困惑，请查阅 Rust 提供的官方文档，
+首先是这本《The Rust Programming Language》。一般安装 Rust 时也会安装它
+（<code>rustup doc</code>），或者你也可以在线查看 <a href="https://doc.rust-lang.org">doc.rust-lang.org</a>。</p>
+<p>也非常欢迎你来社区提问——Rust 社区以友好和乐于助人著称。
+在<a href="https://www.rust-lang.org/community">社区页面</a>你可以看到人们关于 Rust 的讨论的列表。
+You are also very welcome to ask questions –</p>
+</aside>
+<p>你想要写一个什么样的项目呢？不如我们先从一个简单的开始吧：让我们写一个简单的
+<code>grep</code>。我们给这个工具一个字符串和一个文件路径，它将打印出每个包含所查字符串的行。
+不如就叫它 <code>grrs</code> 吧。</p>
+<p>最后，我们想让它像这样工作：</p>
+<pre><code class="language-console">$ cat test.txt
+foo: 10
+bar: 20
+baz: 30
+$ grrs foo test.txt
+foo: 10
+$ grrs --help
+[some help text explaining the available options]
 </code></pre>
+<aside class="note">
+<p><strong>注意：</strong>
+本书是基于 <a href="https://doc.rust-lang.org/edition-guide/index.html">Rust 2018</a> 来创作的，同时，这些代码同样适用于 Rust 2015，
+只需做一点点调整，例如添加上 <code>extern crate foo</code> 声明。</p>
+<p>确保你运行的是 Rust 1.31.0（或更高版本），同时在你的 <code>Cargo.toml</code> 文件中，
+在 <code>[package]</code> 段添加上 <code>edition = &quot;2018&quot;</code>。</p>
+</aside>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                        
-                            <a rel="prev" href="../tutorial/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                                    <a rel="prev" href="../README_zh.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
-
-                        
-                            <a rel="next" href="../tutorial/cli-args.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                                    <a rel="next" href="../tutorial/setup_zh.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
-
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                
-                    <a rel="prev" href="../tutorial/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                    <a rel="prev" href="../README_zh.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
-
-                
-                    <a rel="next" href="../tutorial/cli-args.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                    <a rel="next" href="../tutorial/setup_zh.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
-                
-            </nav>
+                            </nav>
 
         </div>
 
         
-
         
-
         
-
-        
-        <script type="text/javascript">
+                <script type="text/javascript">
             window.playground_copyable = true;
         </script>
         
-
         
-
-        
-        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+                <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
         
-
         <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
         <script src="../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
         
-
         
-
     </body>
 </html>
