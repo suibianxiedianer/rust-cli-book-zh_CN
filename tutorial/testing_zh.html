@@ -380,7 +380,7 @@ fn file_doesnt_exist() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; 
     cmd.arg(&quot;foobar&quot;).arg(&quot;test/file/doesnt/exist&quot;);
     cmd.assert()
         .failure()
-        .stderr(predicate::str::contains(&quot;No such file or directory&quot;));
+        .stderr(predicate::str::contains(&quot;could not read file&quot;));
 
     Ok(())
 }
