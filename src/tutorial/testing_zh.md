@@ -289,7 +289,7 @@ Rust 处理项目的方式非常灵活，尽早地考虑清楚哪些功能要放
 它们只会在开发时被使用到，而使用时则不会。
 
 ```toml
-{{#include testing/Cargo.toml:11:13}}
+{{#include testing/Cargo.toml:16:19}}
 ```
 
 [`assert_cmd`]: https://docs.rs/assert_cmd
