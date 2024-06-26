@@ -289,7 +289,7 @@ Rust 处理项目的方式非常灵活，尽早地考虑清楚哪些功能要放
 它们只会在开发时被使用到，而使用时则不会。
 
 ```toml
-{{#include testing/Cargo.toml:11:13}}
+{{#include testing/Cargo.toml:16:18}}
 ```
 
 [`assert_cmd`]: https://docs.rs/assert_cmd
@@ -320,7 +320,7 @@ Rust 处理项目的方式非常灵活，尽早地考虑清楚哪些功能要放
 让我们把它添加到 `Cargo.toml` 的 `dev-dependencies` 中。
 
 ```toml
-{{#include testing/Cargo.toml:14}}
+{{#include testing/Cargo.toml:19}}
 ```
 
 [`assert_fs`]: https://docs.rs/assert_fs
