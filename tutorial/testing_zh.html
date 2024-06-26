@@ -1,14 +1,16 @@
 <!DOCTYPE HTML>
-<html lang="zh" class="sidebar-visible no-js light">
+<html lang="zh" class="light" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>测试 - Rust 中的命令行应用</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#ffffff">
 
         <link rel="icon" href="../favicon.svg">
         <link rel="shortcut icon" href="../favicon.png">
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="../css/general.css">
         <link rel="stylesheet" href="../css/chrome.css">
         <link rel="stylesheet" href="../css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="../fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../highlight.css">
         <link rel="stylesheet" href="../tomorrow-night.css">
@@ -26,16 +30,18 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="../src/special-content.css">
+
     </head>
-    <body>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -51,50 +57,81 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
-            html.classList.remove('no-js')
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add('js');
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
 
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
-            var html = document.querySelector('html');
-            var sidebar = 'hidden';
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded affix "><a href="../README_zh.html">让我们开始吧！</a></li><li class="chapter-item expanded "><a href="../tutorial/README_zh.html"><strong aria-hidden="true">1.</strong> 15 分钟编写一个命令行工具</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tutorial/setup_zh.html"><strong aria-hidden="true">1.1.</strong> 初始化项目</a></li><li class="chapter-item expanded "><a href="../tutorial/cli-args_zh.html"><strong aria-hidden="true">1.2.</strong> 解析命令行参数</a></li><li class="chapter-item expanded "><a href="../tutorial/impl-draft_zh.html"><strong aria-hidden="true">1.3.</strong> 第一个实现</a></li><li class="chapter-item expanded "><a href="../tutorial/errors_zh.html"><strong aria-hidden="true">1.4.</strong> 更好地反馈错误</a></li><li class="chapter-item expanded "><a href="../tutorial/output_zh.html"><strong aria-hidden="true">1.5.</strong> 输出</a></li><li class="chapter-item expanded "><a href="../tutorial/testing_zh.html" class="active"><strong aria-hidden="true">1.6.</strong> 测试</a></li><li class="chapter-item expanded "><a href="../tutorial/packaging_zh.html"><strong aria-hidden="true">1.7.</strong> 打包并发布一个 Rust 工具</a></li></ol></li><li class="chapter-item expanded "><a href="../in-depth/README_zh.html"><strong aria-hidden="true">2.</strong> 再深入谈谈</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../in-depth/signals_zh.html"><strong aria-hidden="true">2.1.</strong> 信号处理</a></li><li class="chapter-item expanded "><a href="../in-depth/config-files_zh.html"><strong aria-hidden="true">2.2.</strong> 使用配置文件</a></li><li class="chapter-item expanded "><a href="../in-depth/exit-code_zh.html"><strong aria-hidden="true">2.3.</strong> 退出状态码</a></li><li class="chapter-item expanded "><a href="../in-depth/human-communication_zh.html"><strong aria-hidden="true">2.4.</strong> 与人交互</a></li><li class="chapter-item expanded "><a href="../in-depth/machine-communication_zh.html"><strong aria-hidden="true">2.5.</strong> 与机器交互</a></li><li class="chapter-item expanded "><a href="../in-depth/docs_zh.html"><strong aria-hidden="true">2.6.</strong> 为你的 CLI 程序生成文档</a></li></ol></li><li class="chapter-item expanded "><a href="../crates/README_zh.html"><strong aria-hidden="true">3.</strong> 好用的 crates</a></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
 
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky bordered">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
                             <i class="fa fa-bars"></i>
-                        </button>
+                        </label>
                         <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -114,6 +151,7 @@
                         <a href="https://github.com/suibianxiedianer/rust-cli-book-zh_CN" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -127,8 +165,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -157,8 +196,7 @@
 <pre><code class="language-rust ignore">#[test]
 fn check_answer_validity() {
     assert_eq!(answer(), 42);
-}
-</code></pre>
+}</code></pre>
 <p>你可以把这段代码放在几乎任何文件，<code>cargo test</code> 将运行它。
 这里的关键是 <code>#[test]</code> 属性。构建系统会寻找这类函数，并当作测试去运行它们，
 确认他们不会出错（panic）。</p>
@@ -190,31 +228,27 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 <pre><code class="language-rust ignore">// ...
 for line in content.lines() {
     if line.contains(&amp;args.pattern) {
-        println!(&quot;{}&quot;, line);
+        println!("{}", line);
     }
-}
-</code></pre>
+}</code></pre>
 <p>遗憾的是，这样的代码很难测试。
 首先，因为它在 <code>main</code> 函数中，所以我们不能简单的直接调用它。
 而把这段代码移动到一个函数中，就可以很简单地解决这个问题了：</p>
-<pre><pre class="playground"><code class="language-rust no_run">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn find_matches(content: &amp;str, pattern: &amp;str) {
     for line in content.lines() {
         if line.contains(pattern) {
-            println!(&quot;{}&quot;, line);
+            println!("{}", line);
         }
     }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>现在我们可以在测试中调用这个函数了，让我们来看一下它的输出是什么：</p>
 <pre><code class="language-rust ignore">#[test]
 fn find_a_match() {
-    find_matches(&quot;lorem ipsum\ndolor sit amet&quot;, &quot;lorem&quot;);
-    assert_eq!( // uhhhh
-</code></pre>
+    find_matches("lorem ipsum\ndolor sit amet", "lorem");
+    assert_eq!( // uhhhh</code></pre>
 <p>或者，我们还不能……现在，<code>find_matches</code> 会直接将输出打印到 <code>stdout</code>，比如在终端。
 我们不能简单地在测试中捕获它的输出！
 这是在实现功能后再编写测试时经常遇到的问题：
@@ -246,11 +280,10 @@ Rust 的标准库有一些简单的抽象来处理 I/O，在这里我们将使�
 <pre><code class="language-rust ignore">fn find_matches(content: &amp;str, pattern: &amp;str, mut writer: impl std::io::Write) {
     for line in content.lines() {
         if line.contains(pattern) {
-            writeln!(writer, &quot;{}&quot;, line);
+            writeln!(writer, "{}", line);
         }
     }
-}
-</code></pre>
+}</code></pre>
 <p>第三个参数是 <code>mut writer</code>，即一个名为 <code>writer</code> 的可变变量。
 它的类型是 <code>impl std::io::Write</code>，你可理解为“实现了 <code>Write</code> trait 的任意类型”。
 还要注意，我们使用 <code>writeln!(writer, …)</code> 替换了之前的 <code>println!(…)</code>。
@@ -259,29 +292,27 @@ Rust 的标准库有一些简单的抽象来处理 I/O，在这里我们将使�
 <pre><code class="language-rust ignore">#[test]
 fn find_a_match() {
     let mut result = Vec::new();
-    find_matches(&quot;lorem ipsum\ndolor sit amet&quot;, &quot;lorem&quot;, &amp;mut result);
-    assert_eq!(result, b&quot;lorem ipsum\n&quot;);
-}
-</code></pre>
+    find_matches("lorem ipsum\ndolor sit amet", "lorem", &amp;mut result);
+    assert_eq!(result, b"lorem ipsum\n");
+}</code></pre>
 <p>现在我们必须修改 <code>main</code> 函数中对 <code>find_matches</code> 的调用，给它加
 <a href="https://doc.rust-lang.org/1.39.0/std/io/fn.stdout.html"><code>&amp;mut std::io::stdout()</code></a> 作为第三个参数。
 下面是修改完成之后，使用新版 <code>find_matches</code> 的 <code>mian</code> 函数：</p>
 <pre><code class="language-rust ignore">fn main() -&gt; Result&lt;()&gt; {
     let args = Cli::from_args();
     let content = std::fs::read_to_string(&amp;args.path)
-        .with_context(|| format!(&quot;could not read file `{}`&quot;, args.path.display()))?;
+        .with_context(|| format!("could not read file `{}`", args.path.display()))?;
 
     find_matches(&amp;content, &amp;args.pattern, &amp;mut std::io::stdout());
 
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <aside class="note">
 <p><strong>注：</strong>
 由于 <code>stdout</code> 接收的是字节（而不是字符串）,
 所以我们使用 <code>std::io::Write</code> 而不是 <code>std::fmt::Write</code>。
 因此，我们在测试中传入了一个空的 vector 作为 “writer”
-（它会被判断为 <code>Vec&lt;u8&gt;</code>），在 <code>assert_eq</code> 中我们使用 <code>b&quot;foo&quot;</code>。
+（它会被判断为 <code>Vec&lt;u8&gt;</code>），在 <code>assert_eq</code> 中我们使用 <code>b"foo"</code>。
 （<code>b</code> 使得它被当作 <em>byte 字节</em>，即其类型为 <code>&amp;[u8]</code> 而非 <code>&amp;str</code>。</p>
 </aside>
 <aside class="note">
@@ -364,9 +395,9 @@ fn find_a_match() {
 我们不会将这些依赖放到程序的主依赖中，
 而是放到 <code>Cargo.toml</code> 的 <code>dev dependencies</code> 部分。
 它们只会在开发时被使用到，而使用时则不会。</p>
-<pre><code class="language-toml">
-[dependencies]
-structopt = &quot;0.3.22&quot;
+<pre><code class="language-toml">[dev-dependencies]
+assert_cmd = "2.0"
+predicates = "2.0"
 </code></pre>
 <p>设置完成后，让我们来创建我们的 <code>tests/cli.rs</code> 文件：</p>
 <pre><code class="language-rust ignore">use assert_cmd::prelude::*; // Add methods on commands
@@ -375,19 +406,18 @@ use std::process::Command; // Run programs
 
 #[test]
 fn file_doesnt_exist() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
-    let mut cmd = Command::cargo_bin(&quot;grrs&quot;)?;
+    let mut cmd = Command::cargo_bin("grrs")?;
 
-    cmd.arg(&quot;foobar&quot;).arg(&quot;test/file/doesnt/exist&quot;);
+    cmd.arg("foobar").arg("test/file/doesnt/exist");
     cmd.assert()
         .failure()
-        .stderr(predicate::str::contains(&quot;could not read file&quot;));
+        .stderr(predicate::str::contains("could not read file"));
 
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <p>你可以像我们之前做测试时一样，通过运行 <code>cargo test</code> 来运行这个测试。
 在第一次运行时可能会稍慢，因为我们要编译出项目的主程序，它在
-<code>Command::cargo_bin(&quot;grrs&quot;)</code> 被调用。</p>
+<code>Command::cargo_bin("grrs")</code> 被调用。</p>
 <h2 id="生成测试文件"><a class="header" href="#生成测试文件">生成测试文件</a></h2>
 <p>我们刚编写的测试，只会在检查我们的程序的输入的文件参数不存在时输出的错误信息。
 这是很重要的一个测试项，却不是最重要的：
@@ -398,7 +428,7 @@ fn file_doesnt_exist() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; 
 比如，当你要测试去修改一个文件的时候。</p>
 <p>为了生成这些临时文件，我们要使用到 <a href="https://docs.rs/assert_fs"><code>assert_fs</code></a> 箱，
 让我们把它添加到 <code>Cargo.toml</code> 的 <code>dev-dependencies</code> 中。</p>
-<pre><code class="language-toml">anyhow = &quot;1.0&quot;
+<pre><code class="language-toml">assert_fs = "1.0"
 </code></pre>
 <p>这就是新的测试用例，首先去创建一个临时文件（并获取到它的路径），
 然后在里面填充一些内容，再去运行我们的程序来检查我们能否获得正确的输出。
@@ -407,18 +437,17 @@ fn file_doesnt_exist() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; 
 
 #[test]
 fn find_content_in_file() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
-    let file = assert_fs::NamedTempFile::new(&quot;sample.txt&quot;)?;
-    file.write_str(&quot;A test\nActual content\nMore content\nAnother test&quot;)?;
+    let file = assert_fs::NamedTempFile::new("sample.txt")?;
+    file.write_str("A test\nActual content\nMore content\nAnother test")?;
 
-    let mut cmd = Command::cargo_bin(&quot;grrs&quot;)?;
-    cmd.arg(&quot;test&quot;).arg(file.path());
+    let mut cmd = Command::cargo_bin("grrs")?;
+    cmd.arg("test").arg(file.path());
     cmd.assert()
         .success()
-        .stdout(predicate::str::contains(&quot;test\nAnother test&quot;));
+        .stdout(predicate::str::contains("test\nAnother test"));
 
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <aside class="exercise">
 <p><strong>练习：</strong>
 添加一个传入的匹配项为空字符串的集成测试，并按需去调整程序。</p>
@@ -451,9 +480,11 @@ fn find_content_in_file() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&g
                             <a rel="prev" href="../tutorial/output_zh.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
-                            <a rel="next" href="../tutorial/packaging_zh.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+
+                            <a rel="next prefetch" href="../tutorial/packaging_zh.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -463,23 +494,33 @@ fn find_content_in_file() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&g
                     <a rel="prev" href="../tutorial/output_zh.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
-                    <a rel="next" href="../tutorial/packaging_zh.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+
+                    <a rel="next prefetch" href="../tutorial/packaging_zh.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <script type="text/javascript">
+
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
+
+
+    </div>
     </body>
 </html>

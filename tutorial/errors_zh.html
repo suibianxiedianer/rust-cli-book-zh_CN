@@ -1,14 +1,16 @@
 <!DOCTYPE HTML>
-<html lang="zh" class="sidebar-visible no-js light">
+<html lang="zh" class="light" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>更好地反馈错误 - Rust 中的命令行应用</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#ffffff">
 
         <link rel="icon" href="../favicon.svg">
         <link rel="shortcut icon" href="../favicon.png">
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="../css/general.css">
         <link rel="stylesheet" href="../css/chrome.css">
         <link rel="stylesheet" href="../css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="../fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../highlight.css">
         <link rel="stylesheet" href="../tomorrow-night.css">
@@ -26,16 +30,18 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="../src/special-content.css">
+
     </head>
-    <body>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -51,50 +57,81 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
-            html.classList.remove('no-js')
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add('js');
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
 
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
-            var html = document.querySelector('html');
-            var sidebar = 'hidden';
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded affix "><a href="../README_zh.html">让我们开始吧！</a></li><li class="chapter-item expanded "><a href="../tutorial/README_zh.html"><strong aria-hidden="true">1.</strong> 15 分钟编写一个命令行工具</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tutorial/setup_zh.html"><strong aria-hidden="true">1.1.</strong> 初始化项目</a></li><li class="chapter-item expanded "><a href="../tutorial/cli-args_zh.html"><strong aria-hidden="true">1.2.</strong> 解析命令行参数</a></li><li class="chapter-item expanded "><a href="../tutorial/impl-draft_zh.html"><strong aria-hidden="true">1.3.</strong> 第一个实现</a></li><li class="chapter-item expanded "><a href="../tutorial/errors_zh.html" class="active"><strong aria-hidden="true">1.4.</strong> 更好地反馈错误</a></li><li class="chapter-item expanded "><a href="../tutorial/output_zh.html"><strong aria-hidden="true">1.5.</strong> 输出</a></li><li class="chapter-item expanded "><a href="../tutorial/testing_zh.html"><strong aria-hidden="true">1.6.</strong> 测试</a></li><li class="chapter-item expanded "><a href="../tutorial/packaging_zh.html"><strong aria-hidden="true">1.7.</strong> 打包并发布一个 Rust 工具</a></li></ol></li><li class="chapter-item expanded "><a href="../in-depth/README_zh.html"><strong aria-hidden="true">2.</strong> 再深入谈谈</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../in-depth/signals_zh.html"><strong aria-hidden="true">2.1.</strong> 信号处理</a></li><li class="chapter-item expanded "><a href="../in-depth/config-files_zh.html"><strong aria-hidden="true">2.2.</strong> 使用配置文件</a></li><li class="chapter-item expanded "><a href="../in-depth/exit-code_zh.html"><strong aria-hidden="true">2.3.</strong> 退出状态码</a></li><li class="chapter-item expanded "><a href="../in-depth/human-communication_zh.html"><strong aria-hidden="true">2.4.</strong> 与人交互</a></li><li class="chapter-item expanded "><a href="../in-depth/machine-communication_zh.html"><strong aria-hidden="true">2.5.</strong> 与机器交互</a></li><li class="chapter-item expanded "><a href="../in-depth/docs_zh.html"><strong aria-hidden="true">2.6.</strong> 为你的 CLI 程序生成文档</a></li></ol></li><li class="chapter-item expanded "><a href="../crates/README_zh.html"><strong aria-hidden="true">3.</strong> 好用的 crates</a></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
 
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky bordered">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
                             <i class="fa fa-bars"></i>
-                        </button>
+                        </label>
                         <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -114,6 +151,7 @@
                         <a href="https://github.com/suibianxiedianer/rust-cli-book-zh_CN" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -127,8 +165,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -147,16 +186,14 @@
 里面可能是一个 <code>String</code> 或是其它错误类型（这里是 <a href="https://doc.rust-lang.org/1.39.0/std/io/type.Result.html"><code>std::io::Error</code></a>）。</p>
 <p>那么如何得知是哪种类型呢？因为 <code>Result</code> 亦是 <code>enum</code> 类型，
 可以使用 <code>match</code> 去检查里面是哪种变体：</p>
-<pre><pre class="playground"><code class="language-rust no_run">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>let result = std::fs::read_to_string(&quot;test.txt&quot;);
+</span>let result = std::fs::read_to_string("test.txt");
 match result {
-    Ok(content) =&gt; { println!(&quot;File content: {}&quot;, content); }
-    Err(error) =&gt; { println!(&quot;Oh noes: {}&quot;, error); }
+    Ok(content) =&gt; { println!("File content: {}", content); }
+    Err(error) =&gt; { println!("Oh noes: {}", error); }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <aside>
 <p><strong>注：</strong>
 若不清楚 enum 是什么或在 Rust 中如何使用它，可查看
@@ -167,52 +204,46 @@ match result {
 因此，我们需要以某种方式处理错误的情况。
 难点在于，<code>match</code> 代码块的所有分支都应返回一个相同的类型。
 好在这儿有个巧妙的技巧可以解决这个问题：</p>
-<pre><pre class="playground"><code class="language-rust no_run">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>let result = std::fs::read_to_string(&quot;test.txt&quot;);
+</span>let result = std::fs::read_to_string("test.txt");
 let content = match result {
     Ok(content) =&gt; { content },
-    Err(error) =&gt; { panic!(&quot;Can't deal with {}, just exit here&quot;, error); }
+    Err(error) =&gt; { panic!("Can't deal with {}, just exit here", error); }
 };
-println!(&quot;file content: {}&quot;, content);
-<span class="boring">}
-</span></code></pre></pre>
+println!("file content: {}", content);
+<span class="boring">}</span></code></pre></pre>
 <p>我们可以在 match 代码块后使用 <code>content</code>。如果 <code>result</code> 是一个错误，
 字符串就不存在。但好在，程序会在我们使用 <code>content</code> 之前就退出了。</p>
 <p>这种做法看上去有些极端，却是十分实用的。如果你的程序需要读取一个文件，
 且在文件不存在时无法执行任何操作，那么退出是十分合理、有效的选择。
 在 <code>Result</code> 中还有一个快捷方法，叫 <code>unwrap</code>：</p>
-<pre><pre class="playground"><code class="language-rust no_run">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>let content = std::fs::read_to_string(&quot;test.txt&quot;).unwrap();
-<span class="boring">}
-</span></code></pre></pre>
+</span>let content = std::fs::read_to_string("test.txt").unwrap();
+<span class="boring">}</span></code></pre></pre>
 <h2 id="无须-panic"><a class="header" href="#无须-panic">无须 panic</a></h2>
 <p>当然，退出程序并非处理错误的唯一办法。除 <code>!panic</code> 之外，实现 <code>return</code> 也很简单：</p>
 <pre><pre class="playground"><code class="language-rust no_run"><span class="boring">fn main() -&gt; Result&lt;(), Box&lt;std::error::Error&gt;&gt; {
-</span>let result = std::fs::read_to_string(&quot;test.txt&quot;);
+</span>let result = std::fs::read_to_string("test.txt");
 let _content = match result {
     Ok(content) =&gt; { content },
     Err(error) =&gt; { return Err(error.into()); }
 };
 <span class="boring">Ok(())
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p>然而，这改变了我们函数的返回值类型。实际上，一直以来我们的示例都隐藏了一些东西：
 函数的签名（或者说返回值类型）。在最后的含有 <code>return</code> 的示例中，它变得很重要了。
 下面是_完整_的示例：</p>
 <pre><pre class="playground"><code class="language-rust no_run">fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
-    let result = std::fs::read_to_string(&quot;test.txt&quot;);
+    let result = std::fs::read_to_string("test.txt");
     let content = match result {
         Ok(content) =&gt; { content },
         Err(error) =&gt; { return Err(error.into()); }
     };
-    println!(&quot;file content: {}&quot;, content);
+    println!("file content: {}", content);
     Ok(())
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>我们的返回值类型是 <code>Result</code>！这也就是为什么我们可以在 match 的第二个分支里写
 <code>return Err(error)</code>。看到最下面的 <code>Ok(())</code> 了么？它是函数的默认返回值，
 意为“结果没问题，没有内容”。</p>
@@ -228,11 +259,10 @@ let _content = match result {
 Rust 在内部会将之展开生成类似于我们刚写的 <code>match</code> 代码块。</p>
 <p>来试试吧：</p>
 <pre><pre class="playground"><code class="language-rust no_run">fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
-    let content = std::fs::read_to_string(&quot;test.txt&quot;)?;
-    println!(&quot;file content: {}&quot;, content);
+    let content = std::fs::read_to_string("test.txt")?;
+    println!("file content: {}", content);
     Ok(())
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>很简洁是吧！</p>
 <aside>
 <p><strong>注：</strong>
@@ -246,9 +276,9 @@ Rust 在内部会将之展开生成类似于我们刚写的 <code>match</code> �
 </aside>
 <h2 id="providing-context"><a class="header" href="#providing-context">Providing Context</a></h2>
 <p>在 <code>main</code> 函数中使用 <code>?</code> 来获取错误，可以正常工作，但它有一些不足。
-比如：若使用 <code>std::fs::read_to_string(&quot;test.txt&quot;)?</code> 时，<code>test.txt</code> 文件不存在，
+比如：若使用 <code>std::fs::read_to_string("test.txt")?</code> 时，<code>test.txt</code> 文件不存在，
 你将获得以下错误信息：</p>
-<pre><code class="language-text">Error: Os { code: 2, kind: NotFound, message: &quot;No such file or directory&quot; }
+<pre><code class="language-text">Error: Os { code: 2, kind: NotFound, message: "No such file or directory" }
 </code></pre>
 <p>在这里你的代码里没有包含文件名，这会使得确认是哪个文件 <code>NotFound</code> 变得很麻烦。
 但我们有许多种办法可以改进它。</p>
@@ -257,33 +287,31 @@ Rust 在内部会将之展开生成类似于我们刚写的 <code>match</code> �
 struct CustomError(String);
 
 fn main() -&gt; Result&lt;(), CustomError&gt; {
-    let path = &quot;test.txt&quot;;
+    let path = "test.txt";
     let content = std::fs::read_to_string(path)
-        .map_err(|err| CustomError(format!(&quot;Error reading `{}`: {}&quot;, path, err)))?;
-    println!(&quot;file content: {}&quot;, content);
+        .map_err(|err| CustomError(format!("Error reading `{}`: {}", path, err)))?;
+    println!("file content: {}", content);
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <p>现在，运行它将得到我们自定义的错误信息：</p>
-<pre><code class="language-text">Error: CustomError(&quot;Error reading `test.txt`: No such file or directory (os error 2)&quot;)
+<pre><code class="language-text">Error: CustomError("Error reading `test.txt`: No such file or directory (os error 2)")
 </code></pre>
 <p>尽管不是很完美，但我们稍后可以很轻松地为我们的类型调试输出。</p>
 <p>这种模式很觉，但它有一个问题：我们并没有保存下原始错误，而只存储了它呈现的字符串。
 一个名为 <a href="https://docs.rs/anyhow"><code>anyhow</code></a> 的常用库可巧妙的解决这个问题：类似于 <code>CustomError</code> 类型，
 它的 <a href="https://docs.rs/anyhow/1.0/anyhow/trait.Context.html"><code>Context</code></a> 特征可以用来添加描述信息。此外，它还能存储下原始错误，
 所以我们得到了一个指出根本原因的错误信息链。</p>
-<p>在 <code>Cargo.toml</code> 中的 <code>[dependencies]</code> 字段添加上 <code>anyhow = &quot;1.0&quot;</code>。</p>
+<p>在 <code>Cargo.toml</code> 中的 <code>[dependencies]</code> 字段添加上 <code>anyhow = "1.0"</code>。</p>
 <p>一个完整的示例如下：</p>
 <pre><code class="language-rust ignore">use anyhow::{Context, Result};
 
 fn main() -&gt; Result&lt;()&gt; {
-    let path = &quot;test.txt&quot;;
+    let path = "test.txt";
     let content = std::fs::read_to_string(path)
-        .with_context(|| format!(&quot;could not read file `{}`&quot;, path))?;
-    println!(&quot;file content: {}&quot;, content);
+        .with_context(|| format!("could not read file `{}`", path))?;
+    println!("file content: {}", content);
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <p>它将打印出一个错误：</p>
 <pre><code class="language-text">Error: could not read file `test.txt`
 
@@ -298,9 +326,11 @@ Caused by:
                             <a rel="prev" href="../tutorial/impl-draft_zh.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
-                            <a rel="next" href="../tutorial/output_zh.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+
+                            <a rel="next prefetch" href="../tutorial/output_zh.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -310,23 +340,33 @@ Caused by:
                     <a rel="prev" href="../tutorial/impl-draft_zh.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
-                    <a rel="next" href="../tutorial/output_zh.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+
+                    <a rel="next prefetch" href="../tutorial/output_zh.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <script type="text/javascript">
+
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
+
+
+    </div>
     </body>
 </html>

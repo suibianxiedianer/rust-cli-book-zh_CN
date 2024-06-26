@@ -1,15 +1,17 @@
 <!DOCTYPE HTML>
-<html lang="zh" class="sidebar-visible no-js light">
+<html lang="zh" class="light" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Rust 中的命令行应用</title>
-        <meta name="robots" content="noindex" />
+        <meta name="robots" content="noindex">
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#ffffff">
 
         <link rel="icon" href="favicon.svg">
         <link rel="shortcut icon" href="favicon.png">
@@ -17,9 +19,11 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
@@ -27,16 +31,18 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="src/special-content.css">
+
     </head>
-    <body>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -52,50 +58,81 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
-            html.classList.remove('no-js')
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add('js');
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
 
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
-            var html = document.querySelector('html');
-            var sidebar = 'hidden';
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded affix "><a href="README_zh.html">让我们开始吧！</a></li><li class="chapter-item expanded "><a href="tutorial/README_zh.html"><strong aria-hidden="true">1.</strong> 15 分钟编写一个命令行工具</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tutorial/setup_zh.html"><strong aria-hidden="true">1.1.</strong> 初始化项目</a></li><li class="chapter-item expanded "><a href="tutorial/cli-args_zh.html"><strong aria-hidden="true">1.2.</strong> 解析命令行参数</a></li><li class="chapter-item expanded "><a href="tutorial/impl-draft_zh.html"><strong aria-hidden="true">1.3.</strong> 第一个实现</a></li><li class="chapter-item expanded "><a href="tutorial/errors_zh.html"><strong aria-hidden="true">1.4.</strong> 更好地反馈错误</a></li><li class="chapter-item expanded "><a href="tutorial/output_zh.html"><strong aria-hidden="true">1.5.</strong> 输出</a></li><li class="chapter-item expanded "><a href="tutorial/testing_zh.html"><strong aria-hidden="true">1.6.</strong> 测试</a></li><li class="chapter-item expanded "><a href="tutorial/packaging_zh.html"><strong aria-hidden="true">1.7.</strong> 打包并发布一个 Rust 工具</a></li></ol></li><li class="chapter-item expanded "><a href="in-depth/README_zh.html"><strong aria-hidden="true">2.</strong> 再深入谈谈</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="in-depth/signals_zh.html"><strong aria-hidden="true">2.1.</strong> 信号处理</a></li><li class="chapter-item expanded "><a href="in-depth/config-files_zh.html"><strong aria-hidden="true">2.2.</strong> 使用配置文件</a></li><li class="chapter-item expanded "><a href="in-depth/exit-code_zh.html"><strong aria-hidden="true">2.3.</strong> 退出状态码</a></li><li class="chapter-item expanded "><a href="in-depth/human-communication_zh.html"><strong aria-hidden="true">2.4.</strong> 与人交互</a></li><li class="chapter-item expanded "><a href="in-depth/machine-communication_zh.html"><strong aria-hidden="true">2.5.</strong> 与机器交互</a></li><li class="chapter-item expanded "><a href="in-depth/docs_zh.html"><strong aria-hidden="true">2.6.</strong> 为你的 CLI 程序生成文档</a></li></ol></li><li class="chapter-item expanded "><a href="crates/README_zh.html"><strong aria-hidden="true">3.</strong> 好用的 crates</a></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
 
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky bordered">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
                             <i class="fa fa-bars"></i>
-                        </button>
+                        </label>
                         <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -115,6 +152,7 @@
                         <a href="https://github.com/suibianxiedianer/rust-cli-book-zh_CN" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -128,8 +166,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -161,7 +200,7 @@
 <p><strong>先决条件：</strong>
 本教程并不能替代编程的一般性介绍，你最好了解、熟悉一些常见的概念。
 同样，你应该可以熟练的使用命令行或终端。如果你会使用其它的语言，
-那么这对于你接触，学习 Rust 会很有帮助。 </p>
+那么这对于你接触，学习 Rust 会很有帮助。</p>
 <p><strong>获取帮助：</strong>
 如果你在任何时候对所使用的功能感到不解或困惑，请查阅 Rust 提供的官方文档，
 首先是这本《The Rust Programming Language》。一般安装 Rust 时也会安装它
@@ -188,7 +227,7 @@ $ grrs --help
 本书是基于 <a href="https://doc.rust-lang.org/edition-guide/index.html">Rust 2018</a> 来创作的，同时，这些代码同样适用于 Rust 2015，
 只需做一点点调整，例如添加上 <code>extern crate foo</code> 声明。</p>
 <p>确保你运行的是 Rust 1.31.0（或更高版本），同时在你的 <code>Cargo.toml</code> 文件中，
-在 <code>[package]</code> 段添加上 <code>edition = &quot;2018&quot;</code>。</p>
+在 <code>[package]</code> 段添加上 <code>edition = "2018"</code>。</p>
 </aside>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="开始项目"><a class="header" href="#开始项目">开始项目</a></h1>
 <p>首先在你的电脑上<a href="https://www.rust-lang.org/tools/install">安装 Rust</a>（如果还没有，这只需大概几分钟）。
@@ -216,7 +255,7 @@ Hello, world!
 </code></pre>
 <p>我们希望此程序将查找 <code>test.txt</code> 并打印出包含 <code>foobar</code> 的行。
 但我们如何获取这个两个值呢？</p>
-<p>命令行中，程序名中后面的文本通常被称为“命令行参数”或“命令行标识”（比如 --this）。
+<p>命令行中，程序名中后面的文本通常被称为“命令行参数”或“命令行标识”（比如 –this）。
 操作系统通常会将它们识别为字符串列表——简单的说，以空格分隔。</p>
 <p>有很多方法可以识别这些参数，解析，使它们变得更为易于使用。同时，也需要告诉用户，
 程序需要哪些参数及对应的格式是什么。</p>
@@ -224,9 +263,8 @@ Hello, world!
 <p>标准库中提供的 <a href="https://doc.rust-lang.org/1.39.0/std/env/fn.args.html"><code>std::env::args()</code></a> 方法，提供了运行时给定参数的<a href="https://doc.rust-lang.org/1.39.0/std/iter/index.html">迭代器</a>。
 第一项（索引0）是程序名（如 <code>grrs</code>），后面的即才是用户给定的参数。</p>
 <p>以此方法获取原始参数就是这么简单（在 <code>src/main.rs</code> 的 <code>fn main()</code> 函数中）：</p>
-<pre><code class="language-rust ignore">let pattern = std::env::args().nth(1).expect(&quot;no pattern given&quot;);
-let path = std::env::args().nth(2).expect(&quot;no path given&quot;);
-</code></pre>
+<pre><code class="language-rust ignore">let pattern = std::env::args().nth(1).expect("no pattern given");
+let path = std::env::args().nth(2).expect("no path given");</code></pre>
 <h2 id="cli-参数的数据类型"><a class="header" href="#cli-参数的数据类型">CLI 参数的数据类型</a></h2>
 <p>与其将它们视为单纯的一堆文本，不如将 CLI 参数看成程序输入的自定义的数据类型。</p>
 <p>注意 <code>grrs foobar test.txt</code>：这里有两个参数，首先是 <code>pattern</code>（查看的字符串），
@@ -241,7 +279,6 @@ let path = std::env::args().nth(2).expect(&quot;no path given&quot;);
     pattern: String,
     path: std::path::PathBuf,
 }
-
 </code></pre>
 <p>这定义了一个新的，存储了 <code>pattern</code> 和 <code>path</code> 两项数据的结构体(<a href="https://doc.rust-lang.org/1.39.0/book/ch05-00-structs.html"><code>struct</code></a>)。</p>
 <aside>
@@ -250,15 +287,14 @@ let path = std::env::args().nth(2).expect(&quot;no path given&quot;);
 </aside>
 <p>我们并没有获得程序运行所需的参数，而这正是现在需要去做的。
 一种做法是，我们可以手动解析从系统获取的参数列表并以此生成一个结构体，像这样：</p>
-<pre><code class="language-rust ignore">let pattern = std::env::args().nth(1).expect(&quot;no pattern given&quot;);
-let path = std::env::args().nth(2).expect(&quot;no path given&quot;);
+<pre><code class="language-rust ignore">let pattern = std::env::args().nth(1).expect("no pattern given");
+let path = std::env::args().nth(2).expect("no path given");
 let args = Cli {
     pattern: pattern,
     path: std::path::PathBuf::from(path),
-};
-</code></pre>
-<p>这种方式能正常工作，用起来却不是很方便。如何去满足像 <code>--pattern=&quot;foo&quot;</code> 或
-<code>--pattern &quot;foo&quot;</code> 这种参数输入？又如何实现 <code>--help</code>？</p>
+};</code></pre>
+<p>这种方式能正常工作，用起来却不是很方便。如何去满足像 <code>--pattern="foo"</code> 或
+<code>--pattern "foo"</code> 这种参数输入？又如何实现 <code>--help</code>？</p>
 <h2 id="使用-structopt-解析-cli-参数"><a class="header" href="#使用-structopt-解析-cli-参数">使用 StructOpt 解析 CLI 参数</a></h2>
 <p>使用现成的库来实现参数的解析，这是更明智的选择。
 <a href="https://clap.rs/"><code>clap</code></a> 是当前最受欢迎的解析命令行参数的库。它提供了所有你需要的功能，
@@ -266,7 +302,7 @@ let args = Cli {
 <p><a href="https://docs.rs/structopt"><code>structopt</code></a> 库基于 <code>clap</code>，并提供了一个“派生”宏来为结构体生成 <code>clap</code> 代码。
 这可太棒了：我们只需要去声明一个结构体，它就会生成将参数解析为结构体字段的代码！</p>
 <p>首先，我们需要在 <code>Cargo.toml</code> 文件的 <code>[dependencies]</code> 字段里添加上
-<code>structopt = &quot;0.3.13&quot;</code> 来导入 <code>structopt</code>。</p>
+<code>structopt = "0.3.13"</code> 来导入 <code>structopt</code>。</p>
 <p>现在，在我们的代码中，导入，<code>use structopt::StructOpt</code>，在之前创建的
 <code>struct Cli</code> 的正上方添加上 <code>#[derive(StructOpt)]</code>，并顺便写一些文档注释。</p>
 <p>它现在看起来是这样的：</p>
@@ -281,21 +317,19 @@ struct Cli {
     #[structopt(parse(from_os_str))]
     path: std::path::PathBuf,
 }
-
 </code></pre>
 <aside class="node">
 <p><strong>注意：</strong>
 你可以将许多自定义属性添加到字段中。例，我们告诉了 strcutopt 如何解析 <code>PathBuf</code>。
 如果你想将 <code>-o</code> 或 <code>--output</code> 后的参数解析为某个字段，可在字段上方添加上
-<code>#[structopt(short = &quot;o&quot;, long = &quot;output&quot;)]</code>。更多属性设置，请查看
+<code>#[structopt(short = "o", long = "output")]</code>。更多属性设置，请查看
 <a href="https://docs.rs/structopt">structopt documentation</a>。</p>
 </aside>
 <p>本例中，在我们的 <code>Cli</code> 结构体下方即是 <code>main</code> 函数。
 当运行程序时，就会调用这个函数，第一行如下：</p>
 <pre><code class="language-rust ignore">fn main() {
     let args = Cli::from_args();
-}
-</code></pre>
+}</code></pre>
 <p>这将尝试解析参数并存储到 <code>Cli</code> 结构体中。</p>
 <p>但如果解析失败会怎样？这就是使用此方法的美妙之处：Clap 知道它需要什么字段，
 及所需字段的类型。它可以自动生成一个不错的 <code>--help</code> 信息，
@@ -323,8 +357,7 @@ struct Cli {
 
 fn main() {
     let args = Cli::from_args();
-}
-</code></pre>
+}</code></pre>
 <p>无参数运行时：</p>
 <pre><code class="language-console">$ cargo run
     Finished dev [unoptimized + debuginfo] target(s) in 10.16s
@@ -351,12 +384,10 @@ For more information try --help
 <div style="break-before: page; page-break-before: always;"></div><h1 id="grrs-的第一个实现"><a class="header" href="#grrs-的第一个实现"><em>grrs</em> 的第一个实现</a></h1>
 <p>完成命令行参数章节后，我们获取了输入参数，现在我们可以开始编写实现工具了。
 当前我们的 <code>main</code> 函数中仅有一行：</p>
-<pre><code class="language-rust ignore">let args = Cli::from_args();
-</code></pre>
+<pre><code class="language-rust ignore">let args = Cli::from_args();</code></pre>
 <p>首先让我们打开指定的文件。</p>
 <pre><code class="language-rust ignore">let content = std::fs::read_to_string(&amp;args.path)
-    .expect(&quot;could not read file&quot;);
-</code></pre>
+    .expect("could not read file");</code></pre>
 <aside>
 <p><strong>注:</strong>
 看到 <a href="https://doc.rust-lang.org/1.39.0/std/result/enum.Result.html#method.expect"><code>.expect</code></a> 方法了吧？这是一个快捷功能，当无法读取到值时
@@ -366,10 +397,9 @@ For more information try --help
 <p>现在，让我们遍历所有行并打印出包含匹配字符串的每一行：</p>
 <pre><code class="language-rust ignore">for line in content.lines() {
     if line.contains(&amp;args.pattern) {
-        println!(&quot;{}&quot;, line);
+        println!("{}", line);
     }
-}
-</code></pre>
+}</code></pre>
 <h2 id="wrapping-up-1"><a class="header" href="#wrapping-up-1">Wrapping up</a></h2>
 <p>你的代码现在看起来应该如此：</p>
 <pre><code class="language-rust ignore">#![allow(unused)]
@@ -390,16 +420,15 @@ fn main() {
 
 let args = Cli::from_args();
 let content = std::fs::read_to_string(&amp;args.path)
-    .expect(&quot;could not read file&quot;);
+    .expect("could not read file");
 
 for line in content.lines() {
     if line.contains(&amp;args.pattern) {
-        println!(&quot;{}&quot;, line);
+        println!("{}", line);
     }
 }
 
-}
-</code></pre>
+}</code></pre>
 <p>来试试：<code>cargo run -- main src/main.rs</code> 应该能正常工作了！</p>
 <aside class="exercise">
 <p><strong>练习:</strong>
@@ -415,16 +444,14 @@ for line in content.lines() {
 里面可能是一个 <code>String</code> 或是其它错误类型（这里是 <a href="https://doc.rust-lang.org/1.39.0/std/io/type.Result.html"><code>std::io::Error</code></a>）。</p>
 <p>那么如何得知是哪种类型呢？因为 <code>Result</code> 亦是 <code>enum</code> 类型，
 可以使用 <code>match</code> 去检查里面是哪种变体：</p>
-<pre><pre class="playground"><code class="language-rust no_run">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>let result = std::fs::read_to_string(&quot;test.txt&quot;);
+</span>let result = std::fs::read_to_string("test.txt");
 match result {
-    Ok(content) =&gt; { println!(&quot;File content: {}&quot;, content); }
-    Err(error) =&gt; { println!(&quot;Oh noes: {}&quot;, error); }
+    Ok(content) =&gt; { println!("File content: {}", content); }
+    Err(error) =&gt; { println!("Oh noes: {}", error); }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <aside>
 <p><strong>注：</strong>
 若不清楚 enum 是什么或在 Rust 中如何使用它，可查看
@@ -435,52 +462,46 @@ match result {
 因此，我们需要以某种方式处理错误的情况。
 难点在于，<code>match</code> 代码块的所有分支都应返回一个相同的类型。
 好在这儿有个巧妙的技巧可以解决这个问题：</p>
-<pre><pre class="playground"><code class="language-rust no_run">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>let result = std::fs::read_to_string(&quot;test.txt&quot;);
+</span>let result = std::fs::read_to_string("test.txt");
 let content = match result {
     Ok(content) =&gt; { content },
-    Err(error) =&gt; { panic!(&quot;Can't deal with {}, just exit here&quot;, error); }
+    Err(error) =&gt; { panic!("Can't deal with {}, just exit here", error); }
 };
-println!(&quot;file content: {}&quot;, content);
-<span class="boring">}
-</span></code></pre></pre>
+println!("file content: {}", content);
+<span class="boring">}</span></code></pre></pre>
 <p>我们可以在 match 代码块后使用 <code>content</code>。如果 <code>result</code> 是一个错误，
 字符串就不存在。但好在，程序会在我们使用 <code>content</code> 之前就退出了。</p>
 <p>这种做法看上去有些极端，却是十分实用的。如果你的程序需要读取一个文件，
 且在文件不存在时无法执行任何操作，那么退出是十分合理、有效的选择。
 在 <code>Result</code> 中还有一个快捷方法，叫 <code>unwrap</code>：</p>
-<pre><pre class="playground"><code class="language-rust no_run">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>let content = std::fs::read_to_string(&quot;test.txt&quot;).unwrap();
-<span class="boring">}
-</span></code></pre></pre>
+</span>let content = std::fs::read_to_string("test.txt").unwrap();
+<span class="boring">}</span></code></pre></pre>
 <h2 id="无须-panic"><a class="header" href="#无须-panic">无须 panic</a></h2>
 <p>当然，退出程序并非处理错误的唯一办法。除 <code>!panic</code> 之外，实现 <code>return</code> 也很简单：</p>
 <pre><pre class="playground"><code class="language-rust no_run"><span class="boring">fn main() -&gt; Result&lt;(), Box&lt;std::error::Error&gt;&gt; {
-</span>let result = std::fs::read_to_string(&quot;test.txt&quot;);
+</span>let result = std::fs::read_to_string("test.txt");
 let _content = match result {
     Ok(content) =&gt; { content },
     Err(error) =&gt; { return Err(error.into()); }
 };
 <span class="boring">Ok(())
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p>然而，这改变了我们函数的返回值类型。实际上，一直以来我们的示例都隐藏了一些东西：
 函数的签名（或者说返回值类型）。在最后的含有 <code>return</code> 的示例中，它变得很重要了。
 下面是_完整_的示例：</p>
 <pre><pre class="playground"><code class="language-rust no_run">fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
-    let result = std::fs::read_to_string(&quot;test.txt&quot;);
+    let result = std::fs::read_to_string("test.txt");
     let content = match result {
         Ok(content) =&gt; { content },
         Err(error) =&gt; { return Err(error.into()); }
     };
-    println!(&quot;file content: {}&quot;, content);
+    println!("file content: {}", content);
     Ok(())
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>我们的返回值类型是 <code>Result</code>！这也就是为什么我们可以在 match 的第二个分支里写
 <code>return Err(error)</code>。看到最下面的 <code>Ok(())</code> 了么？它是函数的默认返回值，
 意为“结果没问题，没有内容”。</p>
@@ -496,11 +517,10 @@ let _content = match result {
 Rust 在内部会将之展开生成类似于我们刚写的 <code>match</code> 代码块。</p>
 <p>来试试吧：</p>
 <pre><pre class="playground"><code class="language-rust no_run">fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
-    let content = std::fs::read_to_string(&quot;test.txt&quot;)?;
-    println!(&quot;file content: {}&quot;, content);
+    let content = std::fs::read_to_string("test.txt")?;
+    println!("file content: {}", content);
     Ok(())
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>很简洁是吧！</p>
 <aside>
 <p><strong>注：</strong>
@@ -514,9 +534,9 @@ Rust 在内部会将之展开生成类似于我们刚写的 <code>match</code> �
 </aside>
 <h2 id="providing-context"><a class="header" href="#providing-context">Providing Context</a></h2>
 <p>在 <code>main</code> 函数中使用 <code>?</code> 来获取错误，可以正常工作，但它有一些不足。
-比如：若使用 <code>std::fs::read_to_string(&quot;test.txt&quot;)?</code> 时，<code>test.txt</code> 文件不存在，
+比如：若使用 <code>std::fs::read_to_string("test.txt")?</code> 时，<code>test.txt</code> 文件不存在，
 你将获得以下错误信息：</p>
-<pre><code class="language-text">Error: Os { code: 2, kind: NotFound, message: &quot;No such file or directory&quot; }
+<pre><code class="language-text">Error: Os { code: 2, kind: NotFound, message: "No such file or directory" }
 </code></pre>
 <p>在这里你的代码里没有包含文件名，这会使得确认是哪个文件 <code>NotFound</code> 变得很麻烦。
 但我们有许多种办法可以改进它。</p>
@@ -525,33 +545,31 @@ Rust 在内部会将之展开生成类似于我们刚写的 <code>match</code> �
 struct CustomError(String);
 
 fn main() -&gt; Result&lt;(), CustomError&gt; {
-    let path = &quot;test.txt&quot;;
+    let path = "test.txt";
     let content = std::fs::read_to_string(path)
-        .map_err(|err| CustomError(format!(&quot;Error reading `{}`: {}&quot;, path, err)))?;
-    println!(&quot;file content: {}&quot;, content);
+        .map_err(|err| CustomError(format!("Error reading `{}`: {}", path, err)))?;
+    println!("file content: {}", content);
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <p>现在，运行它将得到我们自定义的错误信息：</p>
-<pre><code class="language-text">Error: CustomError(&quot;Error reading `test.txt`: No such file or directory (os error 2)&quot;)
+<pre><code class="language-text">Error: CustomError("Error reading `test.txt`: No such file or directory (os error 2)")
 </code></pre>
 <p>尽管不是很完美，但我们稍后可以很轻松地为我们的类型调试输出。</p>
 <p>这种模式很觉，但它有一个问题：我们并没有保存下原始错误，而只存储了它呈现的字符串。
 一个名为 <a href="https://docs.rs/anyhow"><code>anyhow</code></a> 的常用库可巧妙的解决这个问题：类似于 <code>CustomError</code> 类型，
 它的 <a href="https://docs.rs/anyhow/1.0/anyhow/trait.Context.html"><code>Context</code></a> 特征可以用来添加描述信息。此外，它还能存储下原始错误，
 所以我们得到了一个指出根本原因的错误信息链。</p>
-<p>在 <code>Cargo.toml</code> 中的 <code>[dependencies]</code> 字段添加上 <code>anyhow = &quot;1.0&quot;</code>。</p>
+<p>在 <code>Cargo.toml</code> 中的 <code>[dependencies]</code> 字段添加上 <code>anyhow = "1.0"</code>。</p>
 <p>一个完整的示例如下：</p>
 <pre><code class="language-rust ignore">use anyhow::{Context, Result};
 
 fn main() -&gt; Result&lt;()&gt; {
-    let path = &quot;test.txt&quot;;
+    let path = "test.txt";
     let content = std::fs::read_to_string(path)
-        .with_context(|| format!(&quot;could not read file `{}`&quot;, path))?;
-    println!(&quot;file content: {}&quot;, content);
+        .with_context(|| format!("could not read file `{}`", path))?;
+    println!("file content: {}", content);
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <p>它将打印出一个错误：</p>
 <pre><code class="language-text">Error: could not read file `test.txt`
 
@@ -560,40 +578,34 @@ Caused by:
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="输出"><a class="header" href="#输出">输出</a></h1>
 <h2 id="打印-hello-world"><a class="header" href="#打印-hello-world">打印 “Hello World”</a></h2>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>println!(&quot;Hello World&quot;);
-<span class="boring">}
-</span></code></pre></pre>
+</span>println!("Hello World");
+<span class="boring">}</span></code></pre></pre>
 <p>很简单是吧，让我们进入下一个话题。</p>
 <h2 id="使用-println"><a class="header" href="#使用-println">使用 println</a></h2>
 <p>使用 <code>println!</code> 宏你几乎可以打印出所有你喜欢的东西。这个宏有一些很棒的功能，
 也有一些特殊的语法。它需要你写一个字符串作为第一个参数，其中包括占位符，
 这些占位符将由后面的参数的值作为参数来填充。</p>
 <p>比如：</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let x = 42;
-println!(&quot;My lucky number is {}.&quot;, x);
-<span class="boring">}
-</span></code></pre></pre>
+println!("My lucky number is {}.", x);
+<span class="boring">}</span></code></pre></pre>
 <p>将打印</p>
 <pre><code class="language-console">My lucky number is 42.
 </code></pre>
-<p>上面字符串中的花括号（’{}’）就是占位符中的一种。这是默认的占位符类型，
+<p>上面字符串中的花括号（‘{}’）就是占位符中的一种。这是默认的占位符类型，
 它尝试以人类可读的方式打印出给定的参数的值。对于数字和字符串，这很好用，
 但并不是所有的类型都可行。这就是为什么还有一个 “debug representation”，
 你可以使用这个占位符来调用它 <code>{:?}</code>。</p>
 <p>比如，</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let xs = vec![1, 2, 3];
-println!(&quot;The list is: {:?}&quot;, xs);
-<span class="boring">}
-</span></code></pre></pre>
+println!("The list is: {:?}", xs);
+<span class="boring">}</span></code></pre></pre>
 <p>会打印</p>
 <pre><code class="language-console">The list is: [1, 2, 3]
 </code></pre>
@@ -615,13 +627,11 @@ println!(&quot;The list is: {:?}&quot;, xs);
 这样，正确输出可以存储到文件或管道传输到其它程序中，同时将错误展示给用户。</p>
 </aside>
 <p>在 Rust 中，使用 <code>println!</code> 和 <code>eprintln!</code>，前者对应 <code>stdout</code> 而后者 <code>stderr</code>。</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>println!(&quot;This is information&quot;);
-eprintln!(&quot;This is an error! :(&quot;);
-<span class="boring">}
-</span></code></pre></pre>
+</span>println!("This is information");
+eprintln!("This is an error! :(");
+<span class="boring">}</span></code></pre></pre>
 <aside>
 <p><strong>当心</strong>: 打印 <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">escape codes</a> 可能很危险，会导致用户的终端变成奇异的状态。
 在手动打印时请务必小心使用！</p>
@@ -635,28 +645,24 @@ eprintln!(&quot;This is an error! :(&quot;);
 它都会告诉系统刷新到终端，因为打印每个新行是很常见的。如果你不需要如此，
 你可以使用 <a href="https://doc.rust-lang.org/1.39.0/std/io/struct.BufWriter.html"><code>BufWriter</code></a> 来包装一下 <code>stdout</code> 的句柄，它的默认缓存为 8 kB。
 （当你想立即打印时，在 <code>BufWriter</code> 上调用 <code>.flush()</code> 即可。</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::io::{self, Write};
 
 let stdout = io::stdout(); // get the global stdout entity
 let mut handle = io::BufWriter::new(stdout); // optional: wrap that handle in a buffer
-writeln!(handle, &quot;foo: {}&quot;, 42); // add `?` if you care about errors here
-<span class="boring">}
-</span></code></pre></pre>
+writeln!(handle, "foo: {}", 42); // add `?` if you care about errors here
+<span class="boring">}</span></code></pre></pre>
 <p>其次，为 <code>stdout</code>（或 <code>stderr</code>）申请一把锁并使用 <code>writeln!</code> 来直接打印很有用。
 它会阻止系统不停地锁死和解锁 <code>stdout</code>。</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::io::{self, Write};
 
 let stdout = io::stdout(); // get the global stdout entity
 let mut handle = stdout.lock(); // acquire a lock on it
-writeln!(handle, &quot;foo: {}&quot;, 42); // add `?` if you care about errors here
-<span class="boring">}
-</span></code></pre></pre>
+writeln!(handle, "foo: {}", 42); // add `?` if you care about errors here
+<span class="boring">}</span></code></pre></pre>
 <p>你也可以结合使用这两种方式。</p>
 <h2 id="显示进度条"><a class="header" href="#显示进度条">显示进度条</a></h2>
 <p>一些 CLI 程序的运行时间很长，会花费几分钟甚至数小时。
@@ -667,12 +673,11 @@ writeln!(handle, &quot;foo: {}&quot;, 42); // add `?` if you care about errors h
     let pb = indicatif::ProgressBar::new(100);
     for i in 0..100 {
         do_hard_work();
-        pb.println(format!(&quot;[+] finished #{}&quot;, i));
+        pb.println(format!("[+] finished #{}", i));
         pb.inc(1);
     }
-    pb.finish_with_message(&quot;done&quot;);
-}
-</code></pre>
+    pb.finish_with_message("done");
+}</code></pre>
 <p>细节可查看 <a href="https://docs.rs/indicatif">indicatif 文档</a> 和 <a href="https://github.com/mitsuhiko/indicatif/tree/master/examples">示例</a>。</p>
 <h2 id="日志"><a class="header" href="#日志">日志</a></h2>
 <p>为了更方便了解到我们的程序做了什么，我们需要给它添加上一些日志语句，这很简单。
@@ -694,10 +699,9 @@ writeln!(handle, &quot;foo: {}&quot;, 42); // add `?` if you care about errors h
 
 fn main() {
     env_logger::init();
-    info!(&quot;starting up&quot;);
-    warn!(&quot;oops, nothing implemented!&quot;);
-}
-</code></pre>
+    info!("starting up");
+    warn!("oops, nothing implemented!");
+}</code></pre>
 <p>如果你有 <code>src/bin/output-log.rs</code> 这个文件，在 Linux 或 MacOS 上，你可以运行：</p>
 <pre><code class="language-console">$ env RUST_LOG=info cargo run --bin output-log
     Finished dev [unoptimized + debuginfo] target(s) in 0.17s
@@ -706,7 +710,7 @@ fn main() {
 [2018-11-30T20:25:52Z WARN  output_log] oops, nothing implemented!
 </code></pre>
 <p>在 Windows PowerShell，运行：</p>
-<pre><code class="language-console">$ $env:RUST_LOG=&quot;info&quot;
+<pre><code class="language-console">$ $env:RUST_LOG="info"
 $ cargo run --bin output-log
     Finished dev [unoptimized + debuginfo] target(s) in 0.17s
      Running `target/debug/output-log.exe`
@@ -754,8 +758,7 @@ $ cargo run --bin output-log
 <pre><code class="language-rust ignore">#[test]
 fn check_answer_validity() {
     assert_eq!(answer(), 42);
-}
-</code></pre>
+}</code></pre>
 <p>你可以把这段代码放在几乎任何文件，<code>cargo test</code> 将运行它。
 这里的关键是 <code>#[test]</code> 属性。构建系统会寻找这类函数，并当作测试去运行它们，
 确认他们不会出错（panic）。</p>
@@ -787,31 +790,27 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 <pre><code class="language-rust ignore">// ...
 for line in content.lines() {
     if line.contains(&amp;args.pattern) {
-        println!(&quot;{}&quot;, line);
+        println!("{}", line);
     }
-}
-</code></pre>
+}</code></pre>
 <p>遗憾的是，这样的代码很难测试。
 首先，因为它在 <code>main</code> 函数中，所以我们不能简单的直接调用它。
 而把这段代码移动到一个函数中，就可以很简单地解决这个问题了：</p>
-<pre><pre class="playground"><code class="language-rust no_run">
-<span class="boring">#![allow(unused)]
+<pre><pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn find_matches(content: &amp;str, pattern: &amp;str) {
     for line in content.lines() {
         if line.contains(pattern) {
-            println!(&quot;{}&quot;, line);
+            println!("{}", line);
         }
     }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>现在我们可以在测试中调用这个函数了，让我们来看一下它的输出是什么：</p>
 <pre><code class="language-rust ignore">#[test]
 fn find_a_match() {
-    find_matches(&quot;lorem ipsum\ndolor sit amet&quot;, &quot;lorem&quot;);
-    assert_eq!( // uhhhh
-</code></pre>
+    find_matches("lorem ipsum\ndolor sit amet", "lorem");
+    assert_eq!( // uhhhh</code></pre>
 <p>或者，我们还不能……现在，<code>find_matches</code> 会直接将输出打印到 <code>stdout</code>，比如在终端。
 我们不能简单地在测试中捕获它的输出！
 这是在实现功能后再编写测试时经常遇到的问题：
@@ -843,11 +842,10 @@ Rust 的标准库有一些简单的抽象来处理 I/O，在这里我们将使�
 <pre><code class="language-rust ignore">fn find_matches(content: &amp;str, pattern: &amp;str, mut writer: impl std::io::Write) {
     for line in content.lines() {
         if line.contains(pattern) {
-            writeln!(writer, &quot;{}&quot;, line);
+            writeln!(writer, "{}", line);
         }
     }
-}
-</code></pre>
+}</code></pre>
 <p>第三个参数是 <code>mut writer</code>，即一个名为 <code>writer</code> 的可变变量。
 它的类型是 <code>impl std::io::Write</code>，你可理解为“实现了 <code>Write</code> trait 的任意类型”。
 还要注意，我们使用 <code>writeln!(writer, …)</code> 替换了之前的 <code>println!(…)</code>。
@@ -856,29 +854,27 @@ Rust 的标准库有一些简单的抽象来处理 I/O，在这里我们将使�
 <pre><code class="language-rust ignore">#[test]
 fn find_a_match() {
     let mut result = Vec::new();
-    find_matches(&quot;lorem ipsum\ndolor sit amet&quot;, &quot;lorem&quot;, &amp;mut result);
-    assert_eq!(result, b&quot;lorem ipsum\n&quot;);
-}
-</code></pre>
+    find_matches("lorem ipsum\ndolor sit amet", "lorem", &amp;mut result);
+    assert_eq!(result, b"lorem ipsum\n");
+}</code></pre>
 <p>现在我们必须修改 <code>main</code> 函数中对 <code>find_matches</code> 的调用，给它加
 <a href="https://doc.rust-lang.org/1.39.0/std/io/fn.stdout.html"><code>&amp;mut std::io::stdout()</code></a> 作为第三个参数。
 下面是修改完成之后，使用新版 <code>find_matches</code> 的 <code>mian</code> 函数：</p>
 <pre><code class="language-rust ignore">fn main() -&gt; Result&lt;()&gt; {
     let args = Cli::from_args();
     let content = std::fs::read_to_string(&amp;args.path)
-        .with_context(|| format!(&quot;could not read file `{}`&quot;, args.path.display()))?;
+        .with_context(|| format!("could not read file `{}`", args.path.display()))?;
 
     find_matches(&amp;content, &amp;args.pattern, &amp;mut std::io::stdout());
 
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <aside class="note">
 <p><strong>注：</strong>
 由于 <code>stdout</code> 接收的是字节（而不是字符串）,
 所以我们使用 <code>std::io::Write</code> 而不是 <code>std::fmt::Write</code>。
 因此，我们在测试中传入了一个空的 vector 作为 “writer”
-（它会被判断为 <code>Vec&lt;u8&gt;</code>），在 <code>assert_eq</code> 中我们使用 <code>b&quot;foo&quot;</code>。
+（它会被判断为 <code>Vec&lt;u8&gt;</code>），在 <code>assert_eq</code> 中我们使用 <code>b"foo"</code>。
 （<code>b</code> 使得它被当作 <em>byte 字节</em>，即其类型为 <code>&amp;[u8]</code> 而非 <code>&amp;str</code>。</p>
 </aside>
 <aside class="note">
@@ -961,9 +957,9 @@ fn find_a_match() {
 我们不会将这些依赖放到程序的主依赖中，
 而是放到 <code>Cargo.toml</code> 的 <code>dev dependencies</code> 部分。
 它们只会在开发时被使用到，而使用时则不会。</p>
-<pre><code class="language-toml">
-[dependencies]
-structopt = &quot;0.3.22&quot;
+<pre><code class="language-toml">[dev-dependencies]
+assert_cmd = "2.0"
+predicates = "2.0"
 </code></pre>
 <p>设置完成后，让我们来创建我们的 <code>tests/cli.rs</code> 文件：</p>
 <pre><code class="language-rust ignore">use assert_cmd::prelude::*; // Add methods on commands
@@ -972,19 +968,18 @@ use std::process::Command; // Run programs
 
 #[test]
 fn file_doesnt_exist() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
-    let mut cmd = Command::cargo_bin(&quot;grrs&quot;)?;
+    let mut cmd = Command::cargo_bin("grrs")?;
 
-    cmd.arg(&quot;foobar&quot;).arg(&quot;test/file/doesnt/exist&quot;);
+    cmd.arg("foobar").arg("test/file/doesnt/exist");
     cmd.assert()
         .failure()
-        .stderr(predicate::str::contains(&quot;could not read file&quot;));
+        .stderr(predicate::str::contains("could not read file"));
 
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <p>你可以像我们之前做测试时一样，通过运行 <code>cargo test</code> 来运行这个测试。
 在第一次运行时可能会稍慢，因为我们要编译出项目的主程序，它在
-<code>Command::cargo_bin(&quot;grrs&quot;)</code> 被调用。</p>
+<code>Command::cargo_bin("grrs")</code> 被调用。</p>
 <h2 id="生成测试文件"><a class="header" href="#生成测试文件">生成测试文件</a></h2>
 <p>我们刚编写的测试，只会在检查我们的程序的输入的文件参数不存在时输出的错误信息。
 这是很重要的一个测试项，却不是最重要的：
@@ -995,7 +990,7 @@ fn file_doesnt_exist() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; 
 比如，当你要测试去修改一个文件的时候。</p>
 <p>为了生成这些临时文件，我们要使用到 <a href="https://docs.rs/assert_fs"><code>assert_fs</code></a> 箱，
 让我们把它添加到 <code>Cargo.toml</code> 的 <code>dev-dependencies</code> 中。</p>
-<pre><code class="language-toml">anyhow = &quot;1.0&quot;
+<pre><code class="language-toml">assert_fs = "1.0"
 </code></pre>
 <p>这就是新的测试用例，首先去创建一个临时文件（并获取到它的路径），
 然后在里面填充一些内容，再去运行我们的程序来检查我们能否获得正确的输出。
@@ -1004,18 +999,17 @@ fn file_doesnt_exist() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; 
 
 #[test]
 fn find_content_in_file() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
-    let file = assert_fs::NamedTempFile::new(&quot;sample.txt&quot;)?;
-    file.write_str(&quot;A test\nActual content\nMore content\nAnother test&quot;)?;
+    let file = assert_fs::NamedTempFile::new("sample.txt")?;
+    file.write_str("A test\nActual content\nMore content\nAnother test")?;
 
-    let mut cmd = Command::cargo_bin(&quot;grrs&quot;)?;
-    cmd.arg(&quot;test&quot;).arg(file.path());
+    let mut cmd = Command::cargo_bin("grrs")?;
+    cmd.arg("test").arg(file.path());
     cmd.assert()
         .success()
-        .stdout(predicate::str::contains(&quot;test\nAnother test&quot;));
+        .stdout(predicate::str::contains("test\nAnother test"));
 
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <aside class="exercise">
 <p><strong>练习：</strong>
 添加一个传入的匹配项为空字符串的集成测试，并按需去调整程序。</p>
@@ -1056,23 +1050,23 @@ cargo 从默认的 “crate 仓库”<a href="https://crates.io/">crates.io</a> 
 然后，<a href="https://crates.io/">crates.io</a> 的账号设置页面，生成一个新的 token，
 在你的本地终端运行 <code>cargo login &lt;your-new-token&gt;</code>。
 每台机器上只需运行一次即可一直使用。
-有兴趣可以去看 cargo 的 <a href="https://doc.rust-lang.org/1.39.0/cargo/reference/publishing.html">publishing guide</a> </p>
+有兴趣可以去看 cargo 的 <a href="https://doc.rust-lang.org/1.39.0/cargo/reference/publishing.html">publishing guide</a></p>
 <p>现在你已经了解了 cargo 和 crates.io，可以去发布你的 crate 了。
 在你急急忙忙地想着发布一个新的（或更新版本）crate 前，
 你最好打开 <code>Cargo.toml</code> 并检查是否提供了必要的元数据。
 你可以在 <a href="https://doc.rust-lang.org/1.39.0/cargo/reference/manifest.html">cargo’s manifest format</a> 的文档中找到所有需要设置的字段，
 下面展示了其中的常见条件：</p>
 <pre><code class="language-toml">[package]
-name = &quot;grrs&quot;
-version = &quot;0.1.0&quot;
-authors = [&quot;Your Name &lt;your@email.com&gt;&quot;]
-license = &quot;MIT OR Apache-2.0&quot;
-description = &quot;A tool to search files&quot;
-readme = &quot;README.md&quot;
-homepage = &quot;https://github.com/you/grrs&quot;
-repository = &quot;https://github.com/you/grrs&quot;
-keywords = [&quot;cli&quot;, &quot;search&quot;, &quot;demo&quot;]
-categories = [&quot;command-line-utilities&quot;]
+name = "grrs"
+version = "0.1.0"
+authors = ["Your Name &lt;your@email.com&gt;"]
+license = "MIT OR Apache-2.0"
+description = "A tool to search files"
+readme = "README.md"
+homepage = "https://github.com/you/grrs"
+repository = "https://github.com/you/grrs"
+keywords = ["cli", "search", "demo"]
+categories = ["command-line-utilities"]
 </code></pre>
 <aside class="note">
 <p><strong>注：</strong>
@@ -1223,15 +1217,14 @@ categories = [&quot;command-line-utilities&quot;]
 
 fn main() {
     ctrlc::set_handler(move || {
-        println!(&quot;received Ctrl+C!&quot;);
+        println!("received Ctrl+C!");
     })
-    .expect(&quot;Error setting Ctrl-C handler&quot;);
+    .expect("Error setting Ctrl-C handler");
 
     // Following code does the actual work, and can be interrupted by pressing
     // Ctrl-C. As an example: Let's wait a few seconds.
     thread::sleep(Duration::from_secs(2));
-}
-</code></pre>
+}</code></pre>
 <p>当然，这没啥意义：它只是打印出了一段信息，而并没有退出程序。</p>
 <p>在现实的程序中，在信号处理时去设置一个变量，
 并在程序中各个位置去检查，会是一个好主意。
@@ -1252,7 +1245,7 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
 
     thread::spawn(move || {
         for sig in signals.forever() {
-            println!(&quot;Received signal {:?}&quot;, sig);
+            println!("Received signal {:?}", sig);
         }
     });
 
@@ -1261,8 +1254,7 @@ fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
     thread::sleep(Duration::from_secs(2));
 
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <h2 id="使用通道channels"><a class="header" href="#使用通道channels">使用通道（channels)</a></h2>
 <p>除了设置一个变量并在程序其它部分去检查它，你还可以使用通道：
 创建一个通道，在信号处理器接收到信号后，向里面发送一个值。
@@ -1288,19 +1280,18 @@ fn main() -&gt; Result&lt;()&gt; {
     loop {
         select! {
             recv(ticks) -&gt; _ =&gt; {
-                println!(&quot;working!&quot;);
+                println!("working!");
             }
             recv(ctrl_c_events) -&gt; _ =&gt; {
                 println!();
-                println!(&quot;Goodbye!&quot;);
+                println!("Goodbye!");
                 break;
             }
         }
     }
 
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <h2 id="使用-futures-和-streams"><a class="header" href="#使用-futures-和-streams">使用 futures 和 streams</a></h2>
 <p>如果你使用 <a href="https://tokio.rs/">tokio</a>，那你应该已经写了一个使用异步编程的事件驱动型的程序。
 除了直接使用 crossbeam 的通道之外，
@@ -1329,11 +1320,10 @@ struct MyConfig {
 }
 
 fn main() -&gt; Result&lt;(), io::Error&gt; {
-    let cfg: MyConfig = confy::load(&quot;my_app&quot;)?;
-    println!(&quot;{:#?}&quot;, cfg);
+    let cfg: MyConfig = confy::load("my_app")?;
+    println!("{:#?}", cfg);
     Ok(())
-}
-</code></pre>
+}</code></pre>
 <p>在你放弃可配置性时，毫无疑问它是极其方便好用的。
 所以在你需要简单的配置时，使用这个 crate 会非常合适。</p>
 <h2 id="配置环境"><a class="header" href="#配置环境">配置环境</a></h2>
@@ -1365,20 +1355,19 @@ Rust 的 <a href="https://crates.io/crates/exitcode"><code>exitcode</code></a> �
     // ...actual work...
     match result {
         Ok(_) =&gt; {
-            println!(&quot;Done!&quot;);
+            println!("Done!");
             std::process::exit(exitcode::OK);
         }
         Err(CustomError::CantReadConfig(e)) =&gt; {
-            eprintln!(&quot;Error: {}&quot;, e);
+            eprintln!("Error: {}", e);
             std::process::exit(exitcode::CONFIG);
         }
         Err(e) =&gt; {
-            eprintln!(&quot;Error: {}&quot;, e);
+            eprintln!("Error: {}", e);
             std::process::exit(exitcode::DATAERR);
         }
     }
-}
-</code></pre>
+}</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="与人交互"><a class="header" href="#与人交互">与人交互</a></h1>
 <p>你需要先去阅读<a href="in-depth/../tutorial/output_zh.html">输出</a>这一章节。
 它介绍了如何在终端中写入输入，而本节将谈谈写入哪些输出。</p>
@@ -1436,7 +1425,7 @@ Rust 的 <a href="https://crates.io/crates/exitcode"><code>exitcode</code></a> �
 在 Rust 中，崩溃通常是程序的 <code>panics</code>（“可控崩溃”不“操作系统直接杀死进程”不同）。
 默认情况下，当 panic 发生时，“panic handler” 会在终端中打印一些有用信息。</p>
 <p>比如，你使用 <code>cargo new --bin foo</code> 生成一个新的二进制项目，
-并在 <code>fn main</code> 中添加一句 <code>panic!(&quot;Hello World&quot;)</code>，当你运行程序时：</p>
+并在 <code>fn main</code> 中添加一句 <code>panic!("Hello World")</code>，当你运行程序时：</p>
 <pre><code class="language-console">thread 'main' panicked at 'Hello, world!', src/main.rs:2:5
 note: Run with `RUST_BACKTRACE=1` for a backtrace.
 </code></pre>
@@ -1450,15 +1439,14 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
 fn main() {
    setup_panic!();
 
-   panic!(&quot;Hello world&quot;)
-}
-</code></pre>
+   panic!("Hello world")
+}</code></pre>
 <p>现在它将显示更为友好的信息，并告诉用户他们能做什么：</p>
 <pre><code class="language-console">Well, this is embarrassing.
 
 foo had a problem and crashed. To help us diagnose the problem you can send us a crash report.
 
-We have generated a report file at &quot;/var/folders/n3/dkk459k908lcmkzwcmq0tcv00000gn/T/report-738e1bec-5585-47a4-8158-f1f7227f0168.toml&quot;. Submit an issue or email with the subject of &quot;foo Crash Report&quot; and include the report as an attachment.
+We have generated a report file at "/var/folders/n3/dkk459k908lcmkzwcmq0tcv00000gn/T/report-738e1bec-5585-47a4-8158-f1f7227f0168.toml". Submit an issue or email with the subject of "foo Crash Report" and include the report as an attachment.
 
 - Authors: Your Name &lt;your.name@example.com&gt;
 
@@ -1490,11 +1478,10 @@ we can use a crate like <a href="https://crates.io/crates/atty">atty</a>:</p>
 <pre><code class="language-rust ignore">use atty::Stream;
 
 if atty::is(Stream::Stdout) {
-    println!(&quot;I'm a terminal&quot;);
+    println!("I'm a terminal");
 } else {
-    println!(&quot;I'm not&quot;);
-}
-</code></pre>
+    println!("I'm not");
+}</code></pre>
 <p>Depending on who will read our output,
 we can then add extra information.
 Humans tend to like colors,
@@ -1603,27 +1590,26 @@ use serde_json::json;
 #[derive(StructOpt)]
 struct Cli {
     /// Output JSON instead of human readable messages
-    #[structopt(long = &quot;json&quot;)]
+    #[structopt(long = "json")]
     json: bool,
 }
 
 fn main() {
     let args = Cli::from_args();
     if args.json {
-        println!(&quot;{}&quot;, json!({
-            &quot;type&quot;: &quot;message&quot;,
-            &quot;content&quot;: &quot;Hello world&quot;,
+        println!("{}", json!({
+            "type": "message",
+            "content": "Hello world",
         }));
     } else {
-        println!(&quot;Hello world&quot;);
+        println!("Hello world");
     }
-}
-</code></pre>
+}</code></pre>
 <p>And here is the output:</p>
 <pre><code class="language-console">$ cargo run -q
 Hello world
 $ cargo run -q -- --json
-{&quot;content&quot;:&quot;Hello world&quot;,&quot;type&quot;:&quot;message&quot;}
+{"content":"Hello world","type":"message"}
 </code></pre>
 <p>(Running <code>cargo</code> with <code>-q</code> suppresses its usual output.
 The arguments after <code>--</code> are passed to our program.)</p>
@@ -1639,13 +1625,13 @@ src/components/span.rs
 </code></pre>
 <p>But given <code>--json</code> it will print:</p>
 <pre><code class="language-console">$ rg default --json
-{&quot;type&quot;:&quot;begin&quot;,&quot;data&quot;:{&quot;path&quot;:{&quot;text&quot;:&quot;src/lib.rs&quot;}}}
-{&quot;type&quot;:&quot;match&quot;,&quot;data&quot;:{&quot;path&quot;:{&quot;text&quot;:&quot;src/lib.rs&quot;},&quot;lines&quot;:{&quot;text&quot;:&quot;    Output::default()\n&quot;},&quot;line_number&quot;:37,&quot;absolute_offset&quot;:761,&quot;submatches&quot;:[{&quot;match&quot;:{&quot;text&quot;:&quot;default&quot;},&quot;start&quot;:12,&quot;end&quot;:19}]}}
-{&quot;type&quot;:&quot;end&quot;,&quot;data&quot;:{&quot;path&quot;:{&quot;text&quot;:&quot;src/lib.rs&quot;},&quot;binary_offset&quot;:null,&quot;stats&quot;:{&quot;elapsed&quot;:{&quot;secs&quot;:0,&quot;nanos&quot;:137622,&quot;human&quot;:&quot;0.000138s&quot;},&quot;searches&quot;:1,&quot;searches_with_match&quot;:1,&quot;bytes_searched&quot;:6064,&quot;bytes_printed&quot;:256,&quot;matched_lines&quot;:1,&quot;matches&quot;:1}}}
-{&quot;type&quot;:&quot;begin&quot;,&quot;data&quot;:{&quot;path&quot;:{&quot;text&quot;:&quot;src/components/span.rs&quot;}}}
-{&quot;type&quot;:&quot;match&quot;,&quot;data&quot;:{&quot;path&quot;:{&quot;text&quot;:&quot;src/components/span.rs&quot;},&quot;lines&quot;:{&quot;text&quot;:&quot;    Span::default()\n&quot;},&quot;line_number&quot;:6,&quot;absolute_offset&quot;:117,&quot;submatches&quot;:[{&quot;match&quot;:{&quot;text&quot;:&quot;default&quot;},&quot;start&quot;:10,&quot;end&quot;:17}]}}
-{&quot;type&quot;:&quot;end&quot;,&quot;data&quot;:{&quot;path&quot;:{&quot;text&quot;:&quot;src/components/span.rs&quot;},&quot;binary_offset&quot;:null,&quot;stats&quot;:{&quot;elapsed&quot;:{&quot;secs&quot;:0,&quot;nanos&quot;:22025,&quot;human&quot;:&quot;0.000022s&quot;},&quot;searches&quot;:1,&quot;searches_with_match&quot;:1,&quot;bytes_searched&quot;:5221,&quot;bytes_printed&quot;:277,&quot;matched_lines&quot;:1,&quot;matches&quot;:1}}}
-{&quot;data&quot;:{&quot;elapsed_total&quot;:{&quot;human&quot;:&quot;0.006995s&quot;,&quot;nanos&quot;:6994920,&quot;secs&quot;:0},&quot;stats&quot;:{&quot;bytes_printed&quot;:533,&quot;bytes_searched&quot;:11285,&quot;elapsed&quot;:{&quot;human&quot;:&quot;0.000160s&quot;,&quot;nanos&quot;:159647,&quot;secs&quot;:0},&quot;matched_lines&quot;:2,&quot;matches&quot;:2,&quot;searches&quot;:2,&quot;searches_with_match&quot;:2}},&quot;type&quot;:&quot;summary&quot;}
+{"type":"begin","data":{"path":{"text":"src/lib.rs"}}}
+{"type":"match","data":{"path":{"text":"src/lib.rs"},"lines":{"text":"    Output::default()\n"},"line_number":37,"absolute_offset":761,"submatches":[{"match":{"text":"default"},"start":12,"end":19}]}}
+{"type":"end","data":{"path":{"text":"src/lib.rs"},"binary_offset":null,"stats":{"elapsed":{"secs":0,"nanos":137622,"human":"0.000138s"},"searches":1,"searches_with_match":1,"bytes_searched":6064,"bytes_printed":256,"matched_lines":1,"matches":1}}}
+{"type":"begin","data":{"path":{"text":"src/components/span.rs"}}}
+{"type":"match","data":{"path":{"text":"src/components/span.rs"},"lines":{"text":"    Span::default()\n"},"line_number":6,"absolute_offset":117,"submatches":[{"match":{"text":"default"},"start":10,"end":17}]}}
+{"type":"end","data":{"path":{"text":"src/components/span.rs"},"binary_offset":null,"stats":{"elapsed":{"secs":0,"nanos":22025,"human":"0.000022s"},"searches":1,"searches_with_match":1,"bytes_searched":5221,"bytes_printed":277,"matched_lines":1,"matches":1}}}
+{"data":{"elapsed_total":{"human":"0.006995s","nanos":6994920,"secs":0},"stats":{"bytes_printed":533,"bytes_searched":11285,"elapsed":{"human":"0.000160s","nanos":159647,"secs":0},"matched_lines":2,"matches":2,"searches":2,"searches_with_match":2}},"type":"summary"}
 </code></pre>
 <p>As you can see,
 each JSON document is an object (map) containing a <code>type</code> field.
@@ -1672,29 +1658,27 @@ pub struct Head {
     #[clap(parse(from_os_str))]
     pub file: PathBuf,
     /// how many lines to print
-    #[clap(short = &quot;n&quot;, default_value = &quot;5&quot;)]
+    #[clap(short = "n", default_value = "5")]
     pub count: usize,
-}
-</code></pre>
+}</code></pre>
 <p>其次，你需要使用 <code>build.rs</code> 来在编译时从你的代码中生成手册。</p>
 <p>在这里你要留意几件事（比如如何打包你的程序），
 但现在我们只是简单地把 <code>man</code> 文件放到我们的 <code>src</code> 同级目录。</p>
 <pre><code class="language-rust ignore">use clap::IntoApp;
 use clap_generate::gen_manuals;
 
-#[path=&quot;src/cli.rs&quot;]
+#[path="src/cli.rs"]
 mod cli;
 
 fn main() {
     let app = cli::Head::into_app();
     for man in gen_manuals(&amp;app) {
-        let name = &quot;head.1&quot;;
+        let name = "head.1";
         let mut out = fs::File::create(name).unwrap();
         use std::io::Write;
         out.write_all(man.render().as_bytes()).unwrap();
     }
-}
-</code></pre>
+}</code></pre>
 <p>现在你编译你的程序时，将在你的项目目录生成一个 <code>head.1</code> 文件。</p>
 <p>如果你使用 <code>man</code> 打开它，就可以看到你的文档了。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="好用的-crates"><a class="header" href="#好用的-crates">好用的 crates</a></h1>
@@ -1740,31 +1724,43 @@ fn main() {
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
             </nav>
 
         </div>
 
-        <script type="text/javascript">
+
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript">
+
+        <script>
         window.addEventListener('load', function() {
             window.setTimeout(window.print, 100);
         });
         </script>
+
+    </div>
     </body>
 </html>

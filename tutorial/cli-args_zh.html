@@ -1,14 +1,16 @@
 <!DOCTYPE HTML>
-<html lang="zh" class="sidebar-visible no-js light">
+<html lang="zh" class="light" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>解析命令行参数 - Rust 中的命令行应用</title>
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#ffffff">
 
         <link rel="icon" href="../favicon.svg">
         <link rel="shortcut icon" href="../favicon.png">
@@ -16,9 +18,11 @@
         <link rel="stylesheet" href="../css/general.css">
         <link rel="stylesheet" href="../css/chrome.css">
         <link rel="stylesheet" href="../css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="../fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../highlight.css">
         <link rel="stylesheet" href="../tomorrow-night.css">
@@ -26,16 +30,18 @@
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="../src/special-content.css">
+
     </head>
-    <body>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -51,50 +57,81 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
-            html.classList.remove('no-js')
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add('js');
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
 
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
-            var html = document.querySelector('html');
-            var sidebar = 'hidden';
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
                 <ol class="chapter"><li class="chapter-item expanded affix "><a href="../README_zh.html">让我们开始吧！</a></li><li class="chapter-item expanded "><a href="../tutorial/README_zh.html"><strong aria-hidden="true">1.</strong> 15 分钟编写一个命令行工具</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tutorial/setup_zh.html"><strong aria-hidden="true">1.1.</strong> 初始化项目</a></li><li class="chapter-item expanded "><a href="../tutorial/cli-args_zh.html" class="active"><strong aria-hidden="true">1.2.</strong> 解析命令行参数</a></li><li class="chapter-item expanded "><a href="../tutorial/impl-draft_zh.html"><strong aria-hidden="true">1.3.</strong> 第一个实现</a></li><li class="chapter-item expanded "><a href="../tutorial/errors_zh.html"><strong aria-hidden="true">1.4.</strong> 更好地反馈错误</a></li><li class="chapter-item expanded "><a href="../tutorial/output_zh.html"><strong aria-hidden="true">1.5.</strong> 输出</a></li><li class="chapter-item expanded "><a href="../tutorial/testing_zh.html"><strong aria-hidden="true">1.6.</strong> 测试</a></li><li class="chapter-item expanded "><a href="../tutorial/packaging_zh.html"><strong aria-hidden="true">1.7.</strong> 打包并发布一个 Rust 工具</a></li></ol></li><li class="chapter-item expanded "><a href="../in-depth/README_zh.html"><strong aria-hidden="true">2.</strong> 再深入谈谈</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../in-depth/signals_zh.html"><strong aria-hidden="true">2.1.</strong> 信号处理</a></li><li class="chapter-item expanded "><a href="../in-depth/config-files_zh.html"><strong aria-hidden="true">2.2.</strong> 使用配置文件</a></li><li class="chapter-item expanded "><a href="../in-depth/exit-code_zh.html"><strong aria-hidden="true">2.3.</strong> 退出状态码</a></li><li class="chapter-item expanded "><a href="../in-depth/human-communication_zh.html"><strong aria-hidden="true">2.4.</strong> 与人交互</a></li><li class="chapter-item expanded "><a href="../in-depth/machine-communication_zh.html"><strong aria-hidden="true">2.5.</strong> 与机器交互</a></li><li class="chapter-item expanded "><a href="../in-depth/docs_zh.html"><strong aria-hidden="true">2.6.</strong> 为你的 CLI 程序生成文档</a></li></ol></li><li class="chapter-item expanded "><a href="../crates/README_zh.html"><strong aria-hidden="true">3.</strong> 好用的 crates</a></li></ol>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
         </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
 
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky bordered">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
                             <i class="fa fa-bars"></i>
-                        </button>
+                        </label>
                         <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -114,6 +151,7 @@
                         <a href="https://github.com/suibianxiedianer/rust-cli-book-zh_CN" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -127,8 +165,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -144,7 +183,7 @@
 </code></pre>
 <p>我们希望此程序将查找 <code>test.txt</code> 并打印出包含 <code>foobar</code> 的行。
 但我们如何获取这个两个值呢？</p>
-<p>命令行中，程序名中后面的文本通常被称为“命令行参数”或“命令行标识”（比如 --this）。
+<p>命令行中，程序名中后面的文本通常被称为“命令行参数”或“命令行标识”（比如 –this）。
 操作系统通常会将它们识别为字符串列表——简单的说，以空格分隔。</p>
 <p>有很多方法可以识别这些参数，解析，使它们变得更为易于使用。同时，也需要告诉用户，
 程序需要哪些参数及对应的格式是什么。</p>
@@ -152,9 +191,8 @@
 <p>标准库中提供的 <a href="https://doc.rust-lang.org/1.39.0/std/env/fn.args.html"><code>std::env::args()</code></a> 方法，提供了运行时给定参数的<a href="https://doc.rust-lang.org/1.39.0/std/iter/index.html">迭代器</a>。
 第一项（索引0）是程序名（如 <code>grrs</code>），后面的即才是用户给定的参数。</p>
 <p>以此方法获取原始参数就是这么简单（在 <code>src/main.rs</code> 的 <code>fn main()</code> 函数中）：</p>
-<pre><code class="language-rust ignore">let pattern = std::env::args().nth(1).expect(&quot;no pattern given&quot;);
-let path = std::env::args().nth(2).expect(&quot;no path given&quot;);
-</code></pre>
+<pre><code class="language-rust ignore">let pattern = std::env::args().nth(1).expect("no pattern given");
+let path = std::env::args().nth(2).expect("no path given");</code></pre>
 <h2 id="cli-参数的数据类型"><a class="header" href="#cli-参数的数据类型">CLI 参数的数据类型</a></h2>
 <p>与其将它们视为单纯的一堆文本，不如将 CLI 参数看成程序输入的自定义的数据类型。</p>
 <p>注意 <code>grrs foobar test.txt</code>：这里有两个参数，首先是 <code>pattern</code>（查看的字符串），
@@ -169,7 +207,6 @@ let path = std::env::args().nth(2).expect(&quot;no path given&quot;);
     pattern: String,
     path: std::path::PathBuf,
 }
-
 </code></pre>
 <p>这定义了一个新的，存储了 <code>pattern</code> 和 <code>path</code> 两项数据的结构体(<a href="https://doc.rust-lang.org/1.39.0/book/ch05-00-structs.html"><code>struct</code></a>)。</p>
 <aside>
@@ -178,15 +215,14 @@ let path = std::env::args().nth(2).expect(&quot;no path given&quot;);
 </aside>
 <p>我们并没有获得程序运行所需的参数，而这正是现在需要去做的。
 一种做法是，我们可以手动解析从系统获取的参数列表并以此生成一个结构体，像这样：</p>
-<pre><code class="language-rust ignore">let pattern = std::env::args().nth(1).expect(&quot;no pattern given&quot;);
-let path = std::env::args().nth(2).expect(&quot;no path given&quot;);
+<pre><code class="language-rust ignore">let pattern = std::env::args().nth(1).expect("no pattern given");
+let path = std::env::args().nth(2).expect("no path given");
 let args = Cli {
     pattern: pattern,
     path: std::path::PathBuf::from(path),
-};
-</code></pre>
-<p>这种方式能正常工作，用起来却不是很方便。如何去满足像 <code>--pattern=&quot;foo&quot;</code> 或
-<code>--pattern &quot;foo&quot;</code> 这种参数输入？又如何实现 <code>--help</code>？</p>
+};</code></pre>
+<p>这种方式能正常工作，用起来却不是很方便。如何去满足像 <code>--pattern="foo"</code> 或
+<code>--pattern "foo"</code> 这种参数输入？又如何实现 <code>--help</code>？</p>
 <h2 id="使用-structopt-解析-cli-参数"><a class="header" href="#使用-structopt-解析-cli-参数">使用 StructOpt 解析 CLI 参数</a></h2>
 <p>使用现成的库来实现参数的解析，这是更明智的选择。
 <a href="https://clap.rs/"><code>clap</code></a> 是当前最受欢迎的解析命令行参数的库。它提供了所有你需要的功能，
@@ -194,7 +230,7 @@ let args = Cli {
 <p><a href="https://docs.rs/structopt"><code>structopt</code></a> 库基于 <code>clap</code>，并提供了一个“派生”宏来为结构体生成 <code>clap</code> 代码。
 这可太棒了：我们只需要去声明一个结构体，它就会生成将参数解析为结构体字段的代码！</p>
 <p>首先，我们需要在 <code>Cargo.toml</code> 文件的 <code>[dependencies]</code> 字段里添加上
-<code>structopt = &quot;0.3.13&quot;</code> 来导入 <code>structopt</code>。</p>
+<code>structopt = "0.3.13"</code> 来导入 <code>structopt</code>。</p>
 <p>现在，在我们的代码中，导入，<code>use structopt::StructOpt</code>，在之前创建的
 <code>struct Cli</code> 的正上方添加上 <code>#[derive(StructOpt)]</code>，并顺便写一些文档注释。</p>
 <p>它现在看起来是这样的：</p>
@@ -209,21 +245,19 @@ struct Cli {
     #[structopt(parse(from_os_str))]
     path: std::path::PathBuf,
 }
-
 </code></pre>
 <aside class="node">
 <p><strong>注意：</strong>
 你可以将许多自定义属性添加到字段中。例，我们告诉了 strcutopt 如何解析 <code>PathBuf</code>。
 如果你想将 <code>-o</code> 或 <code>--output</code> 后的参数解析为某个字段，可在字段上方添加上
-<code>#[structopt(short = &quot;o&quot;, long = &quot;output&quot;)]</code>。更多属性设置，请查看
+<code>#[structopt(short = "o", long = "output")]</code>。更多属性设置，请查看
 <a href="https://docs.rs/structopt">structopt documentation</a>。</p>
 </aside>
 <p>本例中，在我们的 <code>Cli</code> 结构体下方即是 <code>main</code> 函数。
 当运行程序时，就会调用这个函数，第一行如下：</p>
 <pre><code class="language-rust ignore">fn main() {
     let args = Cli::from_args();
-}
-</code></pre>
+}</code></pre>
 <p>这将尝试解析参数并存储到 <code>Cli</code> 结构体中。</p>
 <p>但如果解析失败会怎样？这就是使用此方法的美妙之处：Clap 知道它需要什么字段，
 及所需字段的类型。它可以自动生成一个不错的 <code>--help</code> 信息，
@@ -251,8 +285,7 @@ struct Cli {
 
 fn main() {
     let args = Cli::from_args();
-}
-</code></pre>
+}</code></pre>
 <p>无参数运行时：</p>
 <pre><code class="language-console">$ cargo run
     Finished dev [unoptimized + debuginfo] target(s) in 10.16s
@@ -284,9 +317,11 @@ For more information try --help
                             <a rel="prev" href="../tutorial/setup_zh.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
-                            <a rel="next" href="../tutorial/impl-draft_zh.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+
+                            <a rel="next prefetch" href="../tutorial/impl-draft_zh.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
@@ -296,23 +331,33 @@ For more information try --help
                     <a rel="prev" href="../tutorial/setup_zh.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
-                    <a rel="next" href="../tutorial/impl-draft_zh.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+
+                    <a rel="next prefetch" href="../tutorial/impl-draft_zh.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
         </div>
 
-        <script type="text/javascript">
+
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
 
         <!-- Custom JS scripts -->
+
+
+    </div>
     </body>
 </html>
